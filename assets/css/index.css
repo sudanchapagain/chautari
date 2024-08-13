@@ -1,0 +1,91 @@
+h1 {
+  margin-top: 120px;
+  font-size: clamp(2.5rem, 7vw, 4.2rem);
+  text-wrap: balance;
+  text-align: center;
+  line-height: 1;
+  letter-spacing: -1.75px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.description {
+  color: #525252;
+  font-size: clamp(1.3rem, 3.8vw, 2.1rem);
+  text-wrap: balance;
+  font-weight: 500;
+  line-height: 1.375;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+main {
+  padding-left: 32px;
+  padding-right: 32px;
+  margin: 64px;
+}
+
+#primary-highlight {
+  /* background-color: #ff6438; */
+  /* color: white; */
+  padding: 0px 20px;
+  border-radius: 4px;
+}
+
+#smalltext {
+  font-size: 0.5em;
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.cta a {
+  margin: 0 8px;
+}
+
+.button-arrow {
+  display: inline-flex;
+  flex: none;
+  justify-content: center;
+  color: white;
+  vertical-align: bottom;
+}
+
+.primary-button {
+  color: white;
+  background-color: #ff4a22;
+  padding: 14px 25px;
+  border-radius: 66px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.primary-button:hover {
+  background-color: #ff6438;
+}
+
+.secondary-button {
+  color: #171717;
+  background-color: #f0f0f0;
+  padding: 14px 25px;
+  border-radius: 66px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.advert-video {
+  max-width: 80rem;
+  margin: 40px auto;
+  display: block;
+  padding: 32px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #f0f0f0;
+  margin: 32px 0;
+}
