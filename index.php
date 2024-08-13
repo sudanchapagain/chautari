@@ -46,9 +46,9 @@
         </div>
 
         <img class="advert-video" src="./assets/images/placeholder-video.png" alt="video showcasing the product">
+        <hr>
     </main>
 
-    <hr>
     
     <?php include'templates/home.php'; ?>
 </body>
