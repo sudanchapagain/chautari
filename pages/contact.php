@@ -1,7 +1,7 @@
 <?php include('../includes/header.php'); ?>
 
 <head>
-    <title>About - Chautari</title>
+    <title>Contact - Chautari</title>
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
     <style>
