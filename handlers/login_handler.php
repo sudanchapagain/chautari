@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $password_hash)) {
             $_SESSION['user_id'] = $user_id;
             $_SESSION['email'] = $email;
-            header("Location: ../templates/explore.php");
+            header("Location: ../pages/explore.php");
             exit();
         } else {
             echo "Invalid password.";
