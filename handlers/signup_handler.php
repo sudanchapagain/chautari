@@ -23,7 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sss", $name, $email, $password_hash);
 
     if ($stmt->execute()) {
-        echo "Signup successful! You can now <a href='../pages/login.php'>login</a>.";
+        header("Location: ../pages/login.php?signup=success");
+        exit();
     } else {
         echo "Error: " . $stmt->error;
     }

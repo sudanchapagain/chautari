@@ -15,6 +15,11 @@
 <body class="centerBody">
 
 <main class="formCenter">
+
+    <?php if (isset($_GET['signup']) && $_GET['signup'] == 'success'): ?>
+        <p class="signupSuccessMessage">Signup was successful! Please log in.</p>
+    <?php endif; ?>
+
     <img class="smallImageInForm" src="../assets/images/logo-32.svg" alt="" srcset="">
     
     <h1>Log in</h1>
