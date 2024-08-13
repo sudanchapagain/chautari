@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Struggling to discover fun and exciting events near you? Chautari brings the best local events tailored to you so you can join
+            local happenings with ease.">
+    <meta property="og:title" content="Chautari — Find out about events around you.">
+
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico" sizes="any">
     <link rel="stylesheet" href="../assets/css/header.css">
 </head>
 <body>
