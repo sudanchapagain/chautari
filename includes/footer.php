@@ -1,6 +1,7 @@
 <head>
     <link rel="stylesheet" href="../assets/css/footer.css">
 </head>
+
 <body>
     <footer>
         <div class="footer-inner">
@@ -11,19 +12,20 @@
                     127.8C15.9 166 48 199 86.14 200a72.2 72.2 0 0 0 33.86-7.53v-35.53l-43.58-21.78a8 
                     8 0 1 1 7.16-14.32L120 139.06V88a8 8 0 0 1 16 0v27.06l36.42-18.22a8 8 0 1 1 7.16 
                     14.32L136 132.94v59.53a72.2 72.2 0 0 0 32 7.53h1.82c38.18-1 70.29-34 70.18-72.2a71.71 
-                    71.71 0 0 0-41.9-65.21"/></svg>
+                    71.71 0 0 0-41.9-65.21" />
+                </svg>
             </div>
-        
-            <div  class="footer-element-two">
+
+            <div class="footer-element-two">
                 <ul>
                     <li><a href="../pages/contact.php">Contact</a></li>
                     <li><a href="../pages/privacy.php">Privacy</a></li>
                     <li><a href="../pages/terms.php">Terms</a></li>
                     <li><a href="../pages/DPA.php">DPA</a></li>
-                    </ul>
-                </div>
-            
-            <div  class="footer-element-three">
+                </ul>
+            </div>
+
+            <div class="footer-element-three">
                 <a href="#">
                     <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10.0083
@@ -69,8 +71,8 @@
                             20.455H16.8467V14.1933C16.8467 12.3467 16.0617 11.7767 15.0483
                             11.7767C13.9783 11.7767 12.9283 12.5833 12.9283
                             14.24V20.455H9.32V8.99167H12.79V10.58H12.8367C13.185 9.875 14.405 8.67
-                            16.2667 8.67C18.28 8.67 20.455 9.865 20.455 13.365L20.4533 20.455Z"
-                            fill="currentColor"></path>
+                            16.2667 8.67C18.28 8.67 20.455 9.865 20.455 13.365L20.4533 20.455Z" fill="currentColor">
+                            </path>
                         </g>
                         <defs>
                             <clipPath id="clip0_5338_376">
@@ -89,8 +91,10 @@
                     </svg>
                 </a>
             </div>
-            
-            <div><p class="copy-info"> 2024 Sano Chautari Software Company limited.</p></div>
+
+            <div>
+                <p class="copy-info"> 2024 Sano Chautari Software Company limited.</p>
+            </div>
         </div>
     </footer>
 </body>
