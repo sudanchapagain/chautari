@@ -27,17 +27,21 @@
         <div class="formbody">
             <form action="../handlers/signup_handler.php" method="post" onsubmit="return validateForm()">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" required inputmode="text">
+                <span id="nameError" class="error"></span>
 
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required inputmode="email">
+                <span id="emailError" class="error"></span>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required inputmode="password">
+                <span id="passwordError" class="error"></span>
 
 
                 <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
+                <input type="password" id="confirm_password" name="confirm_password" required inputmode="password">
+                <span id="confirmPasswordError" class="error"></span>
 
                 <span id="passNoMatch"></span>
                 <style>

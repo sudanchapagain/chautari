@@ -31,10 +31,12 @@
         <div class="formbody">
             <form action="../handlers/login_handler.php" method="post">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" required inputmode="email">
+                <span id="emailError" class="error"></span>
 
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required inputmode="password">
+                <span id="passwordError" class="error"></span>
 
                 <br>
 
