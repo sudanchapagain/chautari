@@ -1,4 +1,4 @@
-<?php include('../includes/header.php'); ?>
+<?php include('../components/header.php'); ?>
 
 <head>
     <title>Contact - Chautari</title>
@@ -64,4 +64,4 @@
 
 
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../components/footer.php'); ?>

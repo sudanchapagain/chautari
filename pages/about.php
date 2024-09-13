@@ -1,4 +1,4 @@
-<?php include('../includes/header.php'); ?>
+<?php include('../components/header.php'); ?>
 
 <head>
     <title>About - Chautari</title>
@@ -82,5 +82,4 @@
 </html>
 
 
-
-<?php include('../includes/footer.php'); ?>
+<?php include('../components/footer.php'); ?>

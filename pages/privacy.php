@@ -1,4 +1,4 @@
-<?php include('../includes/header.php'); ?>
+<?php include('../components/header.php'); ?>
 
 <head>
     <title>Privacy policy - Chautari</title>
@@ -149,4 +149,4 @@
 
 
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../components/footer.php'); ?>

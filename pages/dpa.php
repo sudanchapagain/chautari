@@ -1,4 +1,4 @@
-<?php include('../includes/header.php'); ?>
+<?php include('../components/header.php'); ?>
 
 <head>
     <title>Data Protection Agreement - Chautari</title>
@@ -90,4 +90,4 @@
 
 
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../components/footer.php'); ?>

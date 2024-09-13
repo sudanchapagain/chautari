@@ -1,4 +1,4 @@
-<?php include('../includes/header.php'); ?>
+<?php include('../components/header.php'); ?>
 
 <head>
     <title>Terms and Conditions - Chautari</title>
@@ -121,4 +121,4 @@
 
 
 
-<?php include('../includes/footer.php'); ?>
+<?php include('../components/footer.php'); ?>
