@@ -1,6 +1,13 @@
 <?php
 include('../includes/auth_test.php');
-redirectIfAuthenticated();
+$state = isLoggedIn();
+
+if (!$state) {
+    header('Location: /pages/login.php');
+    exit();
+}
+
+include('../handlers/logout_handler.php');
 ?>
 
 <!DOCTYPE html>

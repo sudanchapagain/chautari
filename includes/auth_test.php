@@ -6,14 +6,22 @@ session_start();
 
 function redirectIfNotAuthenticated() {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /login.php');
+        header('Location: /pages/login.php');
         exit();
     }
 }
 
 function redirectIfAuthenticated() {
     if (isset($_SESSION['user_id'])) {
-        header('Location: /explore.php');
+        header('Location: /pages/explore.php');
         exit();
+    }
+}
+
+function isLoggedIn() {
+    if (isset($_SESSION['user_id'])) {
+        return True;
+    } else {
+        return False;
     }
 }
