@@ -16,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn = pg_connect("host=" . DB_HOST . " dbname=" . DB_NAME . " user=" . DB_USER . " password=" . DB_PASS);
 
     if (!$conn) {
-        die("Sorry, something went wrong. Please try again later.");
+        header("Location: ../pages/login.php?login=fail_generic");
+        exit();
     }
 
     $query = "SELECT user_id, password_hash FROM Users WHERE email = $1";
@@ -37,13 +38,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: ../pages/explore.php");
                 exit();
             } else {
-                die("Invalid login credentials.");
+                    header("Location: ../pages/login.php?login=fail");
+                    exit();
             }
         } else {
-            die("Invalid login credentials.");
+            header("Location: ../pages/login.php?login=fail");
+            exit();
         }
     } else {
-        die("Sorry, something went wrong. Please try again later.");
+        header("Location: ../pages/login.php?login=fail_generic");
+        exit();
     }
 
     pg_close($conn);

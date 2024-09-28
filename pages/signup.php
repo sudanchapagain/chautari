@@ -22,6 +22,31 @@ redirectIfAuthenticated();
 <body class="centerBody">
 
     <main class="formCenter">
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'wrong_email_format'): ?>
+            <p class="signupFailMessage">Invalid Email format.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'wrong_name_format'): ?>
+            <p class="signupFailMessage">Name must be at least 2 characters long.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'wrong_password_length'): ?>
+            <p class="signupFailMessage">Password must be at least 8 characters long.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'wrong_password_match'): ?>
+            <p class="signupFailMessage">Passwords do not match.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'generic'): ?>
+            <p class="signupFailMessage">Sorry, something went wrong. Please try again later.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['signup_error']) && $_GET['signup_error'] == 'email_fail'): ?>
+            <p class="signupFailMessage">Please use a different email.</p>
+        <?php endif; ?>
+
         <a href="../index.php" target="_self"><img class="smallImageInForm" src="../assets/images/logo-32.svg" alt="" srcset=""></a>
 
         <h1>Sign up</h1>

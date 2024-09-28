@@ -27,6 +27,14 @@ redirectIfAuthenticated();
             <p class="signupSuccessMessage">Signup was successful! Please log in.</p>
         <?php endif; ?>
 
+        <?php if (isset($_GET['login']) && $_GET['login'] == 'fail'): ?>
+            <p class="loginFailMessage">Invalid credentials! Please try again.</p>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['login']) && $_GET['login'] == 'fail_generic'): ?>
+            <p class="loginFailMessage">Something went wrong! Please try again.</p>
+        <?php endif; ?>
+
         <a href="../index.php" target="_self"><img class="smallImageInForm" src="../assets/images/logo-32.svg" alt="" srcset=""></a>
 
         <h1>Log in</h1>

@@ -19,6 +19,11 @@ function validateForm() {
     valid = false;
   }
 
+  if (name.length <= 2) {
+    showError("nameError", "Name must be longer than 2 characters.");
+    valid = false;
+  }
+
   if (!emailRegex.test(email)) {
     showError("emailError", "Invalid email format.");
     valid = false;
