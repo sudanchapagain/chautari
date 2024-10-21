@@ -1,0 +1,37 @@
+name: PHP CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, pdo_pgsql
+
+    - name: Run PHP CodeSniffer
+      run: |
+        curl -OL https://github.com/squizlabs/PHP_CodeSniffer/archive/refs/tags/3.7.1.zip
+        unzip 3.7.1.zip
+        cd PHP_CodeSniffer-3.7.1
+        php phpcbf --config=/dev/null
+        php ./scripts/phpcs --standard=PSR2 ../
+
+    - name: Run Tests
+      run: |
+        for test_file in tests/*.php; do
+          php "$test_file"
+        done
