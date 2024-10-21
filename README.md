@@ -18,3 +18,4 @@
 `/config`: This directory contains configuration files such as `config.php`, where you store settings like database credentials.
 
 `index.php`: The main entry point for your site. It could serve as the home page, and you can include different sections here.
+
