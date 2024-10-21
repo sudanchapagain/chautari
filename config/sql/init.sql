@@ -1,4 +1,6 @@
-CREATE DATABASE event_booking_system;
+CREATE USER client WITH PASSWORD 'client';
+
+CREATE DATABASE event_booking_system WITH OWNER client;
 
 \c event_booking_system;
 

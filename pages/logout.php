@@ -1,5 +1,5 @@
 <?php
-include('../includes/auth_test.php');
+include('../handlers/auth_test.php');
 $state = isLoggedIn();
 
 if (!$state) {
