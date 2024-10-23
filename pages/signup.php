@@ -80,7 +80,18 @@ redirectIfAuthenticated();
                     }
                 </style>
 
+                <p class="snippetSignInfo"><small><b>Note:</b><br>
+                If you forget your login credentials, we cannot recover or reset them. Please store them securely.</small></p>
+
+                <br>
                 <button type="submit">Sign up</button>
+                <br>
+
+                <p class="snippetSignInfo"><small>By using this service, you agree to our <a href="/pages/privacy.php">Privacy Policy</a>,
+                    <a href="/pages/terms.php">Terms and Conditions</a>, and <a href="/pages/dpa.php">Data Protection
+                    Agreement</a>, which outline how we handle your data and the rules governing usage.</small>
+                </p>
+
             </form>
         </div>
     </main>

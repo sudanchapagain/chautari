@@ -47,11 +47,11 @@
 
 .snippetSignInfo {
   font-size: 0.85rem;
-  line-height: 2;
+  line-height: 1.3;
   color: #737373;
 }
 
-.snippetSignInfo > a {
+.snippetSignInfo a {
   color: #3b82f6;
   text-decoration: none;
 }

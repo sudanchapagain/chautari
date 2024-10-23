@@ -52,7 +52,6 @@ redirectIfAuthenticated();
                 <span id="passwordError" class="error"></span>
 
                 <br>
-
                 <button type="submit">Log in</button>
             </form>
         </div>

@@ -21,7 +21,7 @@
                     <li><a href="../pages/contact.php">Contact</a></li>
                     <li><a href="../pages/privacy.php">Privacy</a></li>
                     <li><a href="../pages/terms.php">Terms</a></li>
-                    <li><a href="../pages/DPA.php">DPA</a></li>
+                    <li><a href="../pages/dpa.php">DPA</a></li>
                 </ul>
             </div>
 
