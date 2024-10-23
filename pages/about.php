@@ -17,7 +17,6 @@
     <main>
         <h1>About</h1>
 
-
         <div class="boxed-text">
             <div class="about-us-extended-logo">
                 <img src="../assets/images/extended-logo.png" alt="extended logo">

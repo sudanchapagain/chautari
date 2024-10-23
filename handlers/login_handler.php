@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $query = "SELECT user_id, password_hash FROM Users WHERE email = $1";
+    $query = "SELECT user_id, password_hash FROM users WHERE email = $1";
     $result = pg_query_params($conn, $query, array($email));
 
     if ($result) {

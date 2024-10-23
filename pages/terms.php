@@ -119,6 +119,4 @@
 
 </html>
 
-
-
 <?php include('../components/footer.php'); ?>

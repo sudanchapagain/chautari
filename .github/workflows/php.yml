@@ -32,6 +32,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        for test_file in tests/*.php; do
-          php "$test_file"
-        done
+        php tests/run_tests.php

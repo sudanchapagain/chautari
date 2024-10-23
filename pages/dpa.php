@@ -71,7 +71,6 @@
                 margin: 20px auto;
             }
 
-
             p {
                 line-height: 1.8;
             }
@@ -81,13 +80,10 @@
             }
         </style>
 
-
     </main>
 
 </body>
 
 </html>
-
-
 
 <?php include('../components/footer.php'); ?>

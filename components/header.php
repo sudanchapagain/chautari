@@ -1,3 +1,5 @@
+<?php include(__DIR__ . '/../handlers/auth_test.php'); ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,8 +36,19 @@
             </div>
 
             <div>
+            <?php
+
+            if (!isLoggedIn()) {
+                echo '
                 <a class="nav-button-secondary" href="../pages/login.php">Log in</a>
                 <a class="nav-button-primary" href="../pages/signup.php">Sign up today</a>
+                ';
+            } else {
+                echo '
+                <a class="profile-picture-header" href="../pages/profile.php"><img src=""/></a>
+                ';
+            }
+            ?>
             </div>
 
             <div class="hamburger" onclick="toggleOverlay()">

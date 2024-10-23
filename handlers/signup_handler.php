@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $email_check_query = "SELECT 1 FROM Users WHERE email = $1";
+    $email_check_query = "SELECT 1 FROM users WHERE email = $1";
     $email_check_result = pg_query_params($conn, $email_check_query, array($email));
 
     if (pg_num_rows($email_check_result) > 0) {
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $query = "INSERT INTO Users (name, email, password_hash) VALUES ($1, $2, $3)";
+    $query = "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3)";
     $result = pg_query_params($conn, $query, array($name, $email, $password_hash));
 
     if ($result) {

@@ -22,6 +22,7 @@
                 Chautari can enhance your event discovery experience, we’re here to help!
                 Reach out to us using the contact details below, and a member of our team will
                 get back to you promptly.
+
                 <br>
                 <br>
 
@@ -49,7 +50,6 @@
                 margin: 20px auto;
             }
 
-
             p {
                 line-height: 1.8;
             }
@@ -61,7 +61,5 @@
 </body>
 
 </html>
-
-
 
 <?php include('../components/footer.php'); ?>
