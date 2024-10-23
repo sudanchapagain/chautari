@@ -10,9 +10,9 @@ CREATE TABLE Users
     name          VARCHAR(255)        NOT NULL,
     phone_number  VARCHAR(20),
     email         VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255)        NOT NULL
+    password_hash VARCHAR(255)        NOT NULL,
     reset_token_hash VARCHAR(64) NULL DEFAULT NULL,
-    reset_token_expires_at DATETIME NULL DEFAULT NULL,
+    reset_token_expires_at DATE NULL DEFAULT NULL,
     UNIQUE (reset_token_hash)
 );
 

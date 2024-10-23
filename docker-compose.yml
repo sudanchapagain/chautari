@@ -1,6 +1,14 @@
 services:
   web:
-    image: php:8.3-fpm
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    build: 
+      context: .
+      dockerfile: ./.docker/Dockerfile
     volumes:
       - ./:/var/www/html
     networks:
@@ -10,9 +18,10 @@ services:
     image: nginx:alpine
     ports:
       - "8080:80"
+    restart: always
     volumes:
       - ./:/var/www/html
-      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./.docker/conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
     networks:
@@ -20,20 +29,23 @@ services:
 
   db:
     image: postgres:17
+    restart: always
     environment:
-      POSTGRES_USER: ${DB_NAME}
-      POSTGRES_PASSWORD: ${DB_USER}
-      POSTGRES_DB: ${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./config/sql:/docker-entrypoint-initdb.d
+      - ./.docker/conf/postgres/:/docker-entrypoint-initdb.d
     networks:
       - app-network
 
   prometheus:
     image: prom/prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./.docker/conf/prometheus/config.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
