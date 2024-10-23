@@ -1,32 +1,33 @@
 <?php
-function includeAllFiles($dir) {
-    if (!is_dir($dir)) {
-        echo "Directory $dir does not exist.\n";
-        return;
-    }
-    foreach (glob("$dir/*.php") as $file) {
-        include_once $file;
-    }
-}
 
-$directories = [
-    __DIR__ . '/integration',
-    __DIR__ . '/system',
-    __DIR__ . '/fuzz',
+$testFiles = [
+    __DIR__ . '/test_integration.php',
+    __DIR__ . '/test_system.php',
+    __DIR__ . '/test_fuzz.php',
 ];
 
-foreach ($directories as $directory) {
-    includeAllFiles($directory);
+foreach ($testFiles as $file) {
+    if (file_exists($file)) {
+        include_once $file;
+    } else {
+        echo "Test file $file does not exist.\n";
+    }
 }
 
 if (function_exists('runIntegrationTests')) {
     runIntegrationTests();
+} else {
+    echo "runIntegrationTests function not found.\n";
 }
 
 if (function_exists('runSystemTests')) {
     runSystemTests();
+} else {
+    echo "runSystemTests function not found.\n";
 }
 
 if (function_exists('runFuzzTests')) {
     runFuzzTests();
+} else {
+    echo "runFuzzTests function not found.\n";
 }

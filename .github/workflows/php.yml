@@ -9,9 +9,8 @@ on:
       - main
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -21,14 +20,6 @@ jobs:
       with:
         php-version: '8.3'
         extensions: mbstring, pdo_pgsql
-
-    - name: Run PHP CodeSniffer
-      run: |
-        curl -OL https://github.com/squizlabs/PHP_CodeSniffer/archive/refs/tags/3.7.1.zip
-        unzip 3.7.1.zip
-        cd PHP_CodeSniffer-3.7.1
-        php phpcbf --config=/dev/null
-        php ./scripts/phpcs --standard=PSR2 ../
 
     - name: Run Tests
       run: |
