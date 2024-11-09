@@ -1,1 +1,4 @@
-.idea
+src/config/credentials.php
+ui/
+vendor/
+.php-cs-fixer.cache

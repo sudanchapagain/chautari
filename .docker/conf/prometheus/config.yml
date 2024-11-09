@@ -1,25 +1,24 @@
 global:
-  scrape_interval: 15s # How frequently to scrape metrics
+  scrape_interval: 15s
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'prometheus'
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['localhost:9090']  # Prometheus itself
+      - targets: ["localhost:9090"] # Prometheus itself
 
-  - job_name: 'node_exporter'
+  - job_name: "node_exporter"
     static_configs:
-      - targets: ['node-exporter:9100']  # System metrics
+      - targets: ["node-exporter:9100"] # System metrics
 
-  - job_name: 'postgres_exporter'
+  - job_name: "postgres_exporter"
     static_configs:
-      - targets: ['postgres-exporter:9187']  # PostgreSQL metrics
+      - targets: ["postgres-exporter:9187"] # PostgreSQL metrics
 
-  - job_name: 'nginx_exporter'
+  - job_name: "nginx_exporter"
     static_configs:
-      - targets: ['nginx-exporter:9113']  # Nginx metrics
+      - targets: ["nginx-exporter:9113"] # Nginx metrics
 
-  - job_name: 'php_fpm_exporter'
+  - job_name: "php_fpm_exporter"
     static_configs:
-      - targets: ['php-fpm-exporter:9253']  # PHP-FPM metrics
-
+      - targets: ["php-fpm-exporter:9253"] # PHP-FPM metrics

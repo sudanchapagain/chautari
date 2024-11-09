@@ -6,7 +6,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-    build: 
+    build:
       context: .
       dockerfile: ./.docker/Dockerfile
     volumes:
@@ -35,7 +35,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./.docker/conf/postgres/:/docker-entrypoint-initdb.d
