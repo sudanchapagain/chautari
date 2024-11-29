@@ -1,4 +1,4 @@
 src/config/credentials.php
-ui/
+docs/
 vendor/
 .php-cs-fixer.cache
