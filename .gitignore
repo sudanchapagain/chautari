@@ -2,3 +2,5 @@ src/config/credentials.php
 docs/
 vendor/
 .php-cs-fixer.cache
+.idea/
+public/uploads

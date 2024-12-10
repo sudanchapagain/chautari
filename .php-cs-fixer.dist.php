@@ -18,4 +18,3 @@ return (new Config())
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder);
-

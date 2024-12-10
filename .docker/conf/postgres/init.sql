@@ -5,7 +5,6 @@ CREATE DATABASE event_booking_system WITH OWNER client;
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(16) NOT NULL UNIQUE,
-    profile_picture VARCHAR(255) DEFAULT NULL,
     user_phone VARCHAR(10) UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
@@ -20,7 +19,7 @@ CREATE TABLE events (
     description TEXT,
     organizer_id INT REFERENCES users(user_id) ON DELETE SET NULL,
     capacity INT,
-    terms_and_conditions TEXT,
+    ticket_price DECIMAL(10, 2) NOT NULL,
     is_approved BOOLEAN DEFAULT FALSE
 );
 
@@ -35,32 +34,11 @@ CREATE TABLE event_category_mapping (
     PRIMARY KEY (event_id, category_id)
 );
 
-CREATE TABLE tickets (
-    ticket_id SERIAL PRIMARY KEY,
-    event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
-    ticket_type VARCHAR(100) NOT NULL,
-    ticket_price DECIMAL(10, 2) NOT NULL
-);
-
-CREATE TABLE faqs (
-    faq_id SERIAL PRIMARY KEY,
-    event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
-    question TEXT NOT NULL,
-    answer TEXT NOT NULL
-);
-
 CREATE TABLE user_event_attendance (
     user_id INT REFERENCES users(user_id) ON DELETE SET DEFAULT,
     event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
     status VARCHAR(20) DEFAULT 'confirmed',
     PRIMARY KEY (user_id, event_id)
-);
-
-CREATE TABLE promocodes (
-    promocode_id SERIAL PRIMARY KEY,
-    event_id INT REFERENCES events(event_id) ON DELETE CASCADE,
-    promocode VARCHAR(50) NOT NULL UNIQUE,
-    discount_percentage DECIMAL(5, 2) NOT NULL
 );
 
 CREATE TABLE event_images (

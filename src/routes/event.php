@@ -16,17 +16,12 @@ $imageResult = pg_query_params($db, $imageQuery, [$event_id]);
 $image = pg_fetch_assoc($imageResult);
 
 $query = "
-    SELECT e.*,
+    SELECT e.*, 
            u.username AS organizer_name,
+           u.user_id AS organizer_id,
            COALESCE((
                SELECT COUNT(*) FROM user_event_attendance WHERE event_id = e.event_id
-           ), 0) AS current_participants,
-           e.capacity - COALESCE((
-               SELECT COUNT(*) FROM user_event_attendance WHERE event_id = e.event_id
-           ), 0) AS remaining_capacity,
-           (
-               SELECT MIN(ticket_price) FROM tickets WHERE event_id = e.event_id
-           ) AS min_ticket_price
+           ), 0) AS current_participants
     FROM events e
     LEFT JOIN users u ON e.organizer_id = u.user_id
     WHERE e.event_id = $1 AND e.is_approved = TRUE
@@ -44,100 +39,55 @@ if (!$result) {
     }
 }
 
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'] ?? null;
+$is_admin = $_SESSION['is_admin'] ?? false;
+$is_organizer = $user_id === $event['organizer_id'] || $is_admin;
 
-    if ($action === 'pay') {
-        if ($event['remaining_capacity'] > 0) {
-            if (!$event['min_ticket_price'] || $event['min_ticket_price'] == 0) {
-                $addQuery = "
-                    INSERT INTO user_event_attendance (user_id, event_id)
-                    VALUES ($1, $2)
-                    ON CONFLICT DO NOTHING
-                ";
-                pg_query_params($db, $addQuery, [$user_id, $event_id]);
-                $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
-                header("Location: /event/$event_id");
-                exit();
-            } else {
-                $amount = $event['min_ticket_price'] * 100;
-                $postFields = [
-                    "return_url" => "http://localhost/src/routes/event.php?event_id=$event_id&action=response",
-                    "website_url" => "http://localhost/",
-                    "amount" => $amount,
-                    "purchase_order_id" => "event_$event_id",
-                    "purchase_order_name" => $event['title'],
-                    "customer_info" => [
-                        "name" => $_SESSION['user_name'],
-                        "email" => $_SESSION['user_email'],
-                        "phone" => $_SESSION['user_phone']
-                    ]
-                ];
+$bookingQuery = "SELECT 1 FROM user_event_attendance WHERE user_id = $1 AND event_id = $2 LIMIT 1";
+$bookingResult = pg_query_params($db, $bookingQuery, [$user_id, $event_id]);
+$is_booked = pg_num_rows($bookingResult) > 0;
 
-                $jsonData = json_encode($postFields);
-                $curl = curl_init();
-                curl_setopt_array($curl, [
-                    CURLOPT_URL => 'https://a.khalti.com/api/v2/epayment/initiate/',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => $jsonData,
-                    CURLOPT_HTTPHEADER => [
-                        'Authorization: Key ' . KHALTI_SECRET_KEY,
-                        'Content-Type: application/json'
-                    ]
-                ]);
+if ($action === 'cancel' && $is_booked) {
+    $cancelQuery = "DELETE FROM user_event_attendance WHERE user_id = $1 AND event_id = $2";
+    $cancelResult = pg_query_params($db, $cancelQuery, [$user_id, $event_id]);
 
-                $response = curl_exec($curl);
-                curl_close($curl);
-
-                $responseArray = json_decode($response, true);
-                if (isset($responseArray['payment_url'])) {
-                    header('Location: ' . $responseArray['payment_url']);
-                    exit();
-                } else {
-                    $error = "Payment initiation failed. Please try again.";
-                }
-            }
-        } else {
-            $error = "Sorry, the event is fully booked.";
-        }
-    } elseif ($action === 'response') {
-        $pidx = $_GET['pidx'] ?? null;
-        if ($pidx) {
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => 'https://a.khalti.com/api/v2/epayment/lookup/',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode(['pidx' => $pidx]),
-                CURLOPT_HTTPHEADER => [
-                    'Authorization: Key ' . KHALTI_SECRET_KEY,
-                    'Content-Type: application/json'
-                ]
-            ]);
-
-            $response = curl_exec($curl);
-            curl_close($curl);
-
-            $responseArray = json_decode($response, true);
-            if ($responseArray['status'] === 'Completed') {
-                $addQuery = "
-                    INSERT INTO user_event_attendance (user_id, event_id)
-                    VALUES ($1, $2)
-                    ON CONFLICT DO NOTHING
-                ";
-                pg_query_params($db, $addQuery, [$user_id, $event_id]);
-                $_SESSION['transaction_msg'] = "Payment successful. You are now registered for the event.";
-            } else {
-                $_SESSION['transaction_msg'] = "Payment failed or canceled.";
-            }
-            header("Location: /events/$event_id");
-            exit();
-        }
+    if ($cancelResult) {
+        $_SESSION['transaction_msg'] = "Your booking has been canceled.";
+    } else {
+        $_SESSION['transaction_msg'] = "Error canceling your booking.";
     }
-} else {
-    $_SESSION['transaction_msg'] = "You must log in to register for the event.";
-    header("Location: /login");
+
+    header("Location: /event?event_id=$event_id");
+    exit();
+}
+
+if ($action === 'pay' && isset($_SESSION['user_id']) && !$is_booked) {
+    if ($event['capacity'] > $event['current_participants']) {
+        $addQuery = "
+            INSERT INTO user_event_attendance (user_id, event_id)
+            VALUES ($1, $2)
+            ON CONFLICT DO NOTHING
+        ";
+        pg_query_params($db, $addQuery, [$user_id, $event_id]);
+        $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
+    } else {
+        $_SESSION['transaction_msg'] = "Sorry, the event is fully booked.";
+    }
+    header("Location: /event?event_id=$event_id");
+    exit();
+}
+
+if ($action === 'delete' && $is_organizer) {
+    $deleteQuery = "DELETE FROM events WHERE event_id = $1";
+    $deleteResult = pg_query_params($db, $deleteQuery, [$event_id]);
+
+    if ($deleteResult) {
+        $_SESSION['transaction_msg'] = "Event successfully deleted.";
+    } else {
+        $_SESSION['transaction_msg'] = "Error deleting event.";
+    }
+
+    header('Location: /explore');
     exit();
 }
 ?>
@@ -166,49 +116,55 @@ if (isset($_SESSION['user_id'])) {
                 <?php endif; ?>
 
                 <h2 style="text-align: left;font-size: 3rem;"><?= htmlspecialchars($event['title']) ?></h2>
-
+                <br>
                 <div class="event-meta" style="display: grid;grid-template-columns: 1fr 1fr 1fr;">
-                    <p>Organized by: <?= htmlspecialchars($event['organizer_name'] ?? 'Unknown') ?></p>
-                    <p>Location: <?= htmlspecialchars($event['location']) ?></p>
-
-                    <?php if (!empty($categories)): ?><p>Categories: <?= htmlspecialchars(implode(', ', $categories)) ?></p><?php endif; ?>
-
-                    <?php if ($event['capacity'] > 0): ?>
-                        <div class="event-registration">
-                            <p>Available Spots: <?= $event['capacity'] - $event['current_participants'] ?></p>
-                        </div>
-                <?php endif; ?>
+                    <p><b>Organized by:</b> <?= htmlspecialchars($event['organizer_name'] ?? 'Unknown') ?></p>
+                    <p><b>Location:</b> <?= htmlspecialchars($event['location']) ?></p>
+                    <p><b>Capacity:</b> <?= $event['capacity'] ?> (Available: <?= $event['capacity'] - $event['current_participants'] ?>)</p>
                 </div>
 
-                <?php if ($event['capacity'] > 0): ?>
-                    <div class="event-registration" style="margin: 50px auto; max-width: 200px;">
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <form action="/event?event_id=<?= $event_id ?>" method="GET">
-                                <input type="hidden" name="event_id" value="<?= $event_id ?>">
-                                <input type="hidden" name="action" value="pay">
-                                <button type="submit" class="primary-button register-btn" style="border: none;">Register for Event</button>
-                            </form>
-                        <?php else: ?>
-                            <p><a href="/login" class="secondary-button">Login to register for this event</a></p>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
+                <br><br>
+                <p style="font-size: 1.3rem; text-align: center;"><b>NPR </b><?= htmlspecialchars($event['ticket_price']) ?></p>
+
+                <div class="event-actions" style="margin: 50px auto; max-width: 400px; display: flex; gap: 10px;">
+                    <?php if ($is_booked): ?>
+                        <p>You have already registered for this event.</p>
+                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                            <input type="hidden" name="action" value="cancel">
+                            <button type="submit" class="secondary-button" style="background-color: #E81C30; border:none; color: #fff;">Cancel Booking</button>
+                        </form>
+                    <?php elseif (!isset($_SESSION['user_id'])): ?>
+                        <p><a href="/login" class="secondary-button">Login to register for this event</a></p>
+                    <?php else: ?>
+                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                            <input type="hidden" name="action" value="pay">
+                            <button type="submit" class="primary-button register-btn" style="border: none;">Book Event</button>
+                        </form>
+                    <?php endif; ?>
+
+                    <?php if ($is_organizer): ?>
+                        <a href="/event/edit?event_id=<?= $event_id ?>" class="primary-button" style="background-color: #007BFF;">Update</a>
+                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" class="secondary-button" style="background-color: #E81C30; border:none; color: #fff;">Delete</button>
+                        </form>
+                    <?php elseif ($is_admin): ?>
+                        <a href="/event/edit?event_id=<?= $event_id ?>" class="primary-button" style="background-color: #007BFF;">Update</a>
+                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" class="secondary-button" style="background-color: #E81C30; border:none; color: #fff;">Delete</button>
+                        </form>
+                    <?php endif; ?>
+                </div>
 
                 <div class="event-description">
                     <h2>Description</h2>
                     <p><?= nl2br(htmlspecialchars($event['description'])) ?></p>
-
-                    <hr>
-
-                    <?php if ($event['terms_and_conditions']): ?>
-                        <div class="event-terms">
-                            <h2>Terms and Conditions</h2>
-                            <p><?= nl2br(htmlspecialchars($event['terms_and_conditions'])) ?></p>
-                        </div>
-                    <?php endif; ?>
                 </div>
-
-
             </div>
         <?php endif; ?>
     </main>
@@ -230,12 +186,13 @@ if (isset($_SESSION['user_id'])) {
             color: #555;
         }
 
-        .event-terms > h2 {
-            color: #555;
+        .event-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 
     <?php include __DIR__ . '/../components/footer.php'; ?>
 </body>
 </html>
-

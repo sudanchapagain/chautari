@@ -16,9 +16,9 @@ $params = [];
 $paramIndex = 1;
 
 if ($searchTerm) {
-    $whereConditions[] = "(e.title ILIKE $" . $paramIndex . "::text)";
+    $whereConditions[] = "e.title ILIKE $" . $paramIndex;
     $params[] = '%' . $searchTerm . '%';
-    $paramIndex += 1;
+    $paramIndex++;
 }
 
 if ($location) {
@@ -46,23 +46,23 @@ if ($endDate) {
 }
 
 if ($minPrice !== 0 || $maxPrice !== 10000) {
-    $whereConditions[] = "t.ticket_price >= $" . $paramIndex . " AND t.ticket_price <= $" . ($paramIndex + 1);
+    $whereConditions[] = "e.ticket_price BETWEEN $" . $paramIndex . " AND $" . ($paramIndex + 1);
     $params[] = $minPrice;
     $params[] = $maxPrice;
     $paramIndex += 2;
 }
 
 $whereConditions[] = "e.is_approved = TRUE";
-$whereClause = count($whereConditions) > 0 ? "WHERE " . implode(' AND ', $whereConditions) : '';
+
+$whereClause = $whereConditions ? "WHERE " . implode(' AND ', $whereConditions) : '';
 
 $query = "
-    SELECT e.event_id, e.title, e.location, e.capacity, ed.start_date, ed.end_date, c.name AS category,
-           MIN(t.ticket_price) AS ticket_price
+    SELECT e.event_id, e.title, e.location, e.capacity, e.ticket_price,
+           ed.start_date, ed.end_date, c.name AS category
     FROM events e
     LEFT JOIN event_category_mapping ec ON e.event_id = ec.event_id
     LEFT JOIN event_categories c ON ec.category_id = c.category_id
     LEFT JOIN event_dates ed ON e.event_id = ed.event_id
-    LEFT JOIN tickets t ON e.event_id = t.event_id
     $whereClause
     GROUP BY e.event_id, ed.start_date, ed.end_date, c.name
     ORDER BY ed.start_date ASC
@@ -71,13 +71,18 @@ $query = "
 $result = pg_query_params($db, $query, $params);
 
 if (!$result) {
-    die("Error executing query.");
+    die("Error fetching events.");
 }
 
 $events = pg_fetch_all($result);
 
 $categoriesQuery = 'SELECT category_id, name FROM event_categories';
 $categoriesResult = pg_query($db, $categoriesQuery);
+
+if (!$categoriesResult) {
+    die("Error fetching categories.");
+}
+
 $categories = pg_fetch_all($categoriesResult);
 
 function safe_htmlspecialchars($value)
@@ -153,15 +158,18 @@ function safe_htmlspecialchars($value)
                                 $image = pg_fetch_assoc($imageResult);
                             ?>
                             <?php if ($image && isset($image['image_url'])): ?>
-                                <img src="<?= htmlspecialchars($image['image_url']); ?>" width="100%" style="height: 100px; border-radius: 12px; border: 1px solid black; margin-top: 5rem;">
+                                <img src="<?= htmlspecialchars($image['image_url']); ?>" width="100%" style="height: 200px; border-radius: 12px; border: 1px solid lightgrey;">
                             <?php else: ?>
                                 <div style="display: block; height: 100px"></div>
                             <?php endif; ?>
+                            <br>
+                            <br>
                             <h2 class="event-title"><?= safe_htmlspecialchars($event['title']) ?></h2>
-                            <p class="event-location"><?= safe_htmlspecialchars($event['location']) ?></p>
-                            <p class="event-category"><?= safe_htmlspecialchars($event['category']) ?></p>
-                            <p class="event-date">Date: <?= safe_htmlspecialchars($event['start_date']) ?> - End Date: <?= safe_htmlspecialchars($event['end_date']) ?></p>
-                            <p class="event-price">Price: $<?= safe_htmlspecialchars($event['ticket_price']) ?: '0' ?></p>
+                            <hr style="margin: 10px 0">
+                            <p class="event-location">Location: <?= safe_htmlspecialchars($event['location']) ?></p>
+                            <p class="event-category">Category: <?= safe_htmlspecialchars($event['category']) ?></p>
+                            <p class="event-date">Start Date: <?= safe_htmlspecialchars($event['start_date']) ?> <br> End Date: <?= safe_htmlspecialchars($event['end_date']) ?></p>
+                            <p class="event-price">Price: NPR-<?= safe_htmlspecialchars($event['ticket_price']) ?: '0' ?></p>
                             <p><a href="/event?event_id=<?= $event['event_id'] ?>" class="cta-button-event-list">View More</a></p>
                         </div>
                     <?php endforeach; ?>
@@ -174,4 +182,3 @@ function safe_htmlspecialchars($value)
 </body>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>
-

@@ -54,6 +54,14 @@
                     $user = pg_fetch_assoc($result);
                     $is_organizer = $user['is_organizer'] ?? 'f';
                     $is_admin = $user['is_admin'] ?? 'f';
+                    $username = $user['username'];
+                    if ($is_admin === 't') {
+                        $userType = 'Admin';
+                    } else if ($is_organizer === 't') {
+                        $userType = 'Organizer';
+                    } else {
+                        $userType = 'User';
+                    }
 
                     $profileImage = $user['profile_picture'] ?? null;
                     if (!$profileImage) {
@@ -61,15 +69,22 @@
                     }
 
                     echo '<div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div style="position: relative; width: 2.5rem; height: 2.5rem; overflow: hidden; background-color: #f3f4f6; border-radius: 9999px;">
                             <img src="' . htmlspecialchars($profileImage) . '" alt="Profile Picture" id="profilePic" style="margin: 5px -3px 0 0">
+                        </div>
+                        <div class="profile-info" style="margin-top: 5px">
+                            <p><b>' . htmlspecialchars($username) . '</b></p>
+                            <p style="color: grey">' . htmlspecialchars($userType) . '</p>
+                            </div>
                         </div>
 
                         <div id="profileDropdown" class="ic-profile-dropdown hidden">
                             <ul class="ic-dropdown-list" style="display: block">
                                 <li><a href="/new" class="ic-dropdown-item">New event</a></li>
                                 <li><a href="/profile" class="ic-dropdown-item">Profile</a></li>
-                                <li><a href="/settings" class="ic-dropdown-item">Settings</a></li>';
+                                <li><a href="/settings" class="ic-dropdown-item">Settings</a></li>
+                                <li><a href="/logout" class="ic-dropdown-item">Log out</a></li>';
                     if ($is_organizer === 't' || $is_admin === 't') {
                         echo '<li><a href="/dashboard" class="ic-dropdown-item">Dashboard</a></li>';
                     };

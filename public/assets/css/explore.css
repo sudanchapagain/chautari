@@ -21,7 +21,6 @@
 }
 
 .event-item:hover {
-  transform: translateY(-2px);
   transition: 0.6s;
   border: 1px solid #ff4a22;
 }

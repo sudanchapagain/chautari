@@ -99,14 +99,16 @@ function safe_htmlspecialchars($value)
                             </g>
                         </svg>Dashboard</a></li>
 
-                <li class="<?= isActive($tab, 'bookings') ?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
+                <?php if (!userHasPermission($user_id, 'admin')): ?>
+                        <li class="<?= isActive($tab, 'bookings') ?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <path d="m11 5.79l7.314-1.27a1.5 1.5 0 0 1 .242-.02c.801 0 1.444.664 1.444 1.475v9.786c0 .72-.511 1.34-1.213 1.456l-7.705 1.276a.499.499 0 0 1-.18-.002l-7.647-1.267A1.5 1.5 0 0 1 2 15.744V6.011a1.5 1.5 0 0 1 1.756-1.478L11 5.79Z" opacity=".2" />
                                 <path fill-rule="evenodd" d="M10.08 4.304L2.244 3.019A1.5 1.5 0 0 0 .5 4.5v9.738a1.5 1.5 0 0 0 1.268 1.482l8.155 1.275a.5.5 0 0 0 .577-.494V4.797a.5.5 0 0 0-.42-.493Zm-8-.298L9.5 5.222v10.694L1.923 14.73a.5.5 0 0 1-.423-.493V4.5a.5.5 0 0 1 .58-.494Z" clip-rule="evenodd" />
                                 <path fill-rule="evenodd" d="M18 3a1.5 1.5 0 0 0-.243.02L9.92 4.303a.5.5 0 0 0-.419.493V16.5a.5.5 0 0 0 .577.494l8.155-1.275a1.5 1.5 0 0 0 1.268-1.482V4.5A1.5 1.5 0 0 0 18 3Zm.077 11.73L10.5 15.916V5.222l7.42-1.216a.501.501 0 0 1 .58.494v9.737a.5.5 0 0 1-.423.493Z" clip-rule="evenodd" />
                             </g>
                         </svg>Bookings</a></li>
-
+                    <?php endif; ?>
+                <?php if (!userHasPermission($user_id, 'admin')): ?>
                 <li class="<?= isActive($tab, 'sales') ?>"><a href="/dashboard?tab=sales"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <path fill-rule="evenodd" d="M5.219 2.75H4.2a.75.75 0 0 1 0-1.5h1.603a.75.75 0 0 1 .727.566l1.502 5.937a1.998 1.998 0 0 1 .974-.253h7.989a2.012 2.012 0 0 1 1.955 2.468l-.783 3.461A2.009 2.009 0 0 1 16.21 15H9.79a2.008 2.008 0 0 1-1.956-1.57L7.05 9.967a2.058 2.058 0 0 1-.027-.145a.754.754 0 0 1-.05-.14L5.219 2.75ZM9.25 18.5a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Zm7 0a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Z" clip-rule="evenodd" opacity=".2" />
@@ -115,7 +117,7 @@ function safe_htmlspecialchars($value)
                                 <path d="M17 16.75a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Zm-7 0a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Z" />
                             </g>
                         </svg>Sales</a></li>
-
+                <?php endif; ?>
                 <?php if (userHasPermission($user_id, 'admin')): ?>
                     <li class="<?= isActive($tab, 'moderation') ?>"><a href="/dashboard?tab=moderation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                                 <g fill="currentColor">
@@ -149,39 +151,110 @@ function safe_htmlspecialchars($value)
                             </svg>Manage Posts</a></li>
                 <?php endif; ?>
 
-                <li class="<?= isActive($tab, 'settings') ?>"><a href="/dashboard?tab=settings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
-                            <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
-                                <path d="M11.558 3.5a.75.75 0 0 1 .685.447l.443 1c.044.1.065.202.065.302a6.2 6.2 0 0 1 1.254.52a.751.751 0 0 1 .219-.151l.97-.443a.75.75 0 0 1 .843.151l.837.838a.75.75 0 0 1 .17.8l-.395 1.02a.748.748 0 0 1-.168.26c.218.398.393.818.52 1.255a.75.75 0 0 1 .261.048l1 .373a.75.75 0 0 1 .488.703v1.184a.75.75 0 0 1-.447.686l-1 .443a.748.748 0 0 1-.302.065a6.227 6.227 0 0 1-.52 1.254c.06.061.112.134.151.219l.444.97a.75.75 0 0 1-.152.843l-.838.837a.75.75 0 0 1-.8.17l-1.02-.395a.749.749 0 0 1-.26-.168a6.225 6.225 0 0 1-1.255.52a.75.75 0 0 1-.048.261l-.373 1a.75.75 0 0 1-.703.488h-1.184a.75.75 0 0 1-.686-.447l-.443-1a.748.748 0 0 1-.065-.302a6.226 6.226 0 0 1-1.254-.52a.752.752 0 0 1-.219.151l-.97.443a.75.75 0 0 1-.843-.151l-.837-.838a.75.75 0 0 1-.17-.8l.395-1.02a.75.75 0 0 1 .168-.26A6.224 6.224 0 0 1 4.999 13a.752.752 0 0 1-.261-.048l-1-.373a.75.75 0 0 1-.488-.703v-1.184a.75.75 0 0 1 .447-.686l1-.443a.748.748 0 0 1 .302-.065a6.2 6.2 0 0 1 .52-1.254a.75.75 0 0 1-.15-.219l-.444-.97a.75.75 0 0 1 .152-.843l.837-.837a.75.75 0 0 1 .801-.17l1.02.395c.102.04.189.097.26.168a6.224 6.224 0 0 1 1.254-.52a.75.75 0 0 1 .048-.261l.373-1a.75.75 0 0 1 .703-.488h1.185Z" opacity=".2" />
-                                <path d="M8.232 11.768A2.493 2.493 0 0 0 10 12.5c.672 0 1.302-.267 1.768-.732A2.493 2.493 0 0 0 12.5 10c0-.672-.267-1.302-.732-1.768A2.493 2.493 0 0 0 10 7.5c-.672 0-1.302.267-1.768.732A2.493 2.493 0 0 0 7.5 10c0 .672.267 1.302.732 1.768Zm2.829-.707c-.28.28-.657.439-1.061.439c-.404 0-.78-.16-1.06-.44S8.5 10.405 8.5 10s.16-.78.44-1.06s.656-.44 1.06-.44s.78.16 1.06.44s.44.656.44 1.06s-.16.78-.44 1.06Z" />
-                                <path d="m14.216 3.773l-1.27.714a6.213 6.213 0 0 0-1.166-.48l-.47-1.414a.5.5 0 0 0-.474-.343H9.06a.5.5 0 0 0-.481.365l-.392 1.403a6.214 6.214 0 0 0-1.164.486L5.69 3.835a.5.5 0 0 0-.578.094L3.855 5.185a.5.5 0 0 0-.082.599l.714 1.27c-.199.37-.36.76-.48 1.166l-1.414.47a.5.5 0 0 0-.343.474v1.777a.5.5 0 0 0 .365.481l1.403.392c.122.405.285.794.486 1.164l-.669 1.333a.5.5 0 0 0 .094.578l1.256 1.256a.5.5 0 0 0 .599.082l1.27-.714c.37.199.76.36 1.166.48l.47 1.414a.5.5 0 0 0 .474.343h1.777a.5.5 0 0 0 .481-.365l.392-1.403a6.21 6.21 0 0 0 1.164-.486l1.333.669a.5.5 0 0 0 .578-.093l1.256-1.257a.5.5 0 0 0 .082-.599l-.714-1.27c.199-.37.36-.76.48-1.166l1.414-.47a.5.5 0 0 0 .343-.474V9.06a.5.5 0 0 0-.365-.481l-1.403-.392a6.208 6.208 0 0 0-.486-1.164l.669-1.333a.5.5 0 0 0-.093-.578l-1.257-1.256a.5.5 0 0 0-.599-.082Zm-1.024 1.724l1.184-.667l.733.733l-.627 1.25a.5.5 0 0 0 .019.482c.265.44.464.918.59 1.418a.5.5 0 0 0 .35.36l1.309.366v1.037l-1.327.44a.5.5 0 0 0-.328.354a5.216 5.216 0 0 1-.585 1.42a.5.5 0 0 0-.007.502l.667 1.184l-.733.733l-1.25-.627a.5.5 0 0 0-.482.019c-.44.265-.918.464-1.418.59a.5.5 0 0 0-.36.35l-.366 1.309H9.525l-.44-1.327a.5.5 0 0 0-.355-.328a5.217 5.217 0 0 1-1.42-.585a.5.5 0 0 0-.502-.007l-1.184.667l-.733-.733l.627-1.25a.5.5 0 0 0-.019-.482a5.216 5.216 0 0 1-.59-1.418a.5.5 0 0 0-.35-.36l-1.309-.366V9.525l1.327-.44a.5.5 0 0 0 .327-.355c.125-.5.323-.979.586-1.42a.5.5 0 0 0 .007-.502L4.83 5.624l.733-.733l1.25.627a.5.5 0 0 0 .482-.019c.44-.265.918-.464 1.418-.59a.5.5 0 0 0 .36-.35l.366-1.309h1.037l.44 1.327a.5.5 0 0 0 .354.327c.5.125.979.323 1.42.586a.5.5 0 0 0 .502.007Z" />
-                            </g>
-                        </svg>Settings</a></li>
-
             </ul>
         </div>
 
         <div class="main-content">
             <?php
             $db = getDbConnection();
-$user_id = $_SESSION['user_id'];
-$query = "SELECT is_admin FROM users WHERE user_id = $1";
-$result = pg_query_params($db, $query, [$user_id]);
-$is_admin = false;
+            $user_id = $_SESSION['user_id'];
+            $query = "SELECT is_admin FROM users WHERE user_id = $1";
+            $result = pg_query_params($db, $query, [$user_id]);
+            $is_admin = false;
 
-if ($result) {
-    $user = pg_fetch_assoc($result);
-    if (userHasPermission($user_id, 'admin')) {
-        $is_admin = true;
-    }
-} else {
-    echo "<p>Error fetching user information.</p>";
-    exit();
-}
+            if ($result) {
+                $user = pg_fetch_assoc($result);
+                    if (userHasPermission($user_id, 'admin')) {
+                    $is_admin = true;
+                }
+            } else {
+                echo "<p>Error fetching user information.</p>";
+                exit();
+            }
 
 switch ($tab) {
     case 'bookings':
         echo "<h1>Bookings</h1>";
-        // TODO: SHOW ATTENDEE LIST IN A TABLE with user details, and price.
+
+        $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
+        if (!$connection) {
+            die('Error: Unable to connect to the database.');
+        }
+        $organizerId = $_SESSION['user_id'];
+
+        $query = "SELECT e.event_id, e.title AS event_title, e.ticket_price, u.user_id, u.username, u.profile_picture, u.email, u.user_phone, a.status 
+          FROM events e 
+          JOIN user_event_attendance a ON e.event_id = a.event_id 
+          JOIN users u ON a.user_id = u.user_id 
+          WHERE e.organizer_id = $1 
+          ORDER BY e.event_id, u.username";
+
+        $result = pg_query_params($connection, $query, [$organizerId]);
+
+        if (!$result) {
+            $error = pg_last_error($connection);
+            die("Query failed: $error");
+        }
+
+        $data = [];
+        while ($row = pg_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+
+        $events = [];
+        foreach ($data as $row) {
+            $event_id = $row['event_id'];
+            if (!isset($events[$event_id])) {
+                $events[$event_id] = ['title' => $row['event_title'], 'ticket_price' => $row['ticket_price'], 'attendees' => []];
+            }
+            $events[$event_id]['attendees'][] = $row;
+        }
+        echo "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css' rel='stylesheet'>
+              <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js'></script>";
+
+echo "<div class='accordion' id='eventAccordion'>";
+foreach ($events as $event_id => $event) {
+    $accordion_id = "event_$event_id";
+    echo "
+    <div class='accordion-item'>
+        <h2 class='accordion-header' id='heading_$accordion_id'>
+            <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse_$accordion_id' aria-expanded='true' aria-controls='collapse_$accordion_id'>
+                {$event['title']} (Ticket Price: {$event['ticket_price']})
+            </button>
+        </h2>
+        <div id='collapse_$accordion_id' class='accordion-collapse collapse' aria-labelledby='heading_$accordion_id' data-bs-parent='#eventAccordion'>
+            <div class='accordion-body'>
+                <table class='table table-bordered'>
+                    <thead>
+                        <tr>
+                            <th>Attendee ID</th>
+                            <th>Username</th>
+                            <th>Profile Picture</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+    foreach ($event['attendees'] as $attendee) {
+        echo "
+                        <tr>
+                            <td>{$attendee['user_id']}</td>
+                            <td>{$attendee['username']}</td>
+                            <td><img src='{$attendee['profile_picture']}' alt='Profile Picture' width='50'></td>
+                            <td>{$attendee['email']}</td>
+                            <td>{$attendee['user_phone']}</td>
+                            <td>{$attendee['status']}</td>
+                        </tr>";
+    }
+    echo "
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>";
+}
+echo "</div>";
         break;
 
     case 'sales':
@@ -340,10 +413,7 @@ switch ($tab) {
                     $message = "Error approving the event.";
                 }
             } elseif ($action === 'reject') {
-                $deleteTicketsQuery = "DELETE FROM tickets WHERE event_id = $1";
                 $deleteEventQuery = "DELETE FROM events WHERE event_id = $1";
-
-                pg_query_params($db, $deleteTicketsQuery, [$event_id]);
                 $deleteResult = pg_query_params($db, $deleteEventQuery, [$event_id]);
 
                 if ($deleteResult) {
@@ -409,13 +479,10 @@ switch ($tab) {
         }
         break;
 
-    case 'settings':
-        echo "<h1>Settings</h1>";
-        break;
-
     case 'dashboard':
     default:
         echo "<h1>Dashboard</h1>";
+        if (!userHasPermission($user_id, 'admin')):
         echo "<div>
         <style>
     .bento-container {
@@ -596,6 +663,7 @@ switch ($tab) {
   </div>
   </div>
   ";
+        endif;
         break;
 }
 ?>

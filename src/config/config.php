@@ -18,8 +18,7 @@ if (!defined('DB_PORT')) {
     define('DB_PORT', getenv('DB_PORT') ?: '5432');
 }
 
-function getDbConnection(): PgSql\Connection
-{
+function getDbConnection() {
     $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
     if (!$connection) {
         die('Error: Unable to connect to the database.');

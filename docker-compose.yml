@@ -42,42 +42,12 @@ services:
     networks:
       - app-network
 
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./.docker/conf/prometheus/config.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - app-network
-
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
-  node-exporter:
-    image: prom/node-exporter
-    ports:
-      - "9100:9100"
-    networks:
-      - app-network
-
   postgres-exporter:
     image: wrouesnel/postgres_exporter
     environment:
       DATA_SOURCE_NAME: "postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable"
     ports:
       - "9187:9187"
-    networks:
-      - app-network
-
-  nginx-exporter:
-    image: nginx/nginx-prometheus-exporter
-    ports:
-      - "9113:9113"
     networks:
       - app-network
 

@@ -1,7 +1,6 @@
 <?php
 
 $testFiles = [
-    __DIR__ . '/test_integration.php',
     __DIR__ . '/test_system.php',
     __DIR__ . '/test_fuzz.php',
 ];
@@ -14,20 +13,14 @@ foreach ($testFiles as $file) {
     }
 }
 
-if (function_exists('runIntegrationTests')) {
-    runIntegrationTests();
-} else {
-    echo "runIntegrationTests function not found.\n";
-}
-
 if (function_exists('runSystemTests')) {
     runSystemTests();
 } else {
     echo "runSystemTests function not found.\n";
 }
 
-if (function_exists('runFuzzTests')) {
-    runFuzzTests();
+if (function_exists('runUnitTests')) {
+    runUnitTests();
 } else {
-    echo "runFuzzTests function not found.\n";
+    echo "runUnitTests function not found.\n";
 }

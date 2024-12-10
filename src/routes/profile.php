@@ -2,33 +2,14 @@
 include __DIR__ . '/../components/header.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
-$is_admin = false;
-
 if (!$user_id) {
     header("Location: login");
     exit();
 }
 
 $db = getDbConnection();
-
-$query = "SELECT is_admin FROM users WHERE user_id = $1";
-$result = pg_query_params($db, $query, [$user_id]);
-
-if ($result) {
-    $user_data = pg_fetch_assoc($result);
-    $is_admin = $user_data['is_admin'] ?? false;
-}
-
 $query = "SELECT user_id, username, profile_picture, user_phone, email FROM users WHERE user_id = $1";
-$params = [$user_id];
-
-if (isset($_GET['username']) && $is_admin) {
-    $username = pg_escape_string($_GET['username']);
-    $query = "SELECT user_id, username, profile_picture, user_phone, email FROM users WHERE username = $1";
-    $params = [$username];
-}
-
-$result = pg_query_params($db, $query, $params);
+$result = pg_query_params($db, $query, [$user_id]);
 
 if (!$result) {
     die('Error fetching user data');
@@ -40,7 +21,6 @@ function escape($value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
-
 ?>
 
 <head>
@@ -52,14 +32,13 @@ function escape($value): string
 
 <body>
     <main style="max-width: 550px; margin: 0 auto;">
-
         <h1 style="font-size: 2.3rem; letter-spacing: normal;  margin-top: 50px;">Profile</h1>
 
         <div style="display:block; border: 1px solid lightgrey; border-radius: 8px; padding: 30px; margin-bottom: 4rem; background-color: #fafafa;">
-
             <?php if (isset($_GET['update']) && $_GET['update'] === 'success'): ?>
                 <p class="signupSuccessMessage" style="text-align: center;">Profile updated successfully!</p>
             <?php endif; ?>
+            
             <div>
                 <img src="<?= escape($user['profile_picture'] ?: '/assets/images/default-avatar.png') ?>" alt="Profile Picture"
                     style="width: 150px; height: 150px; border-radius: 50%; margin: 0 auto; display: block; border: 1px solid lightgrey;"></p>
@@ -73,9 +52,7 @@ function escape($value): string
             <p class="data-item-profile-detail"><?= escape($user['user_phone']) ?></span></p>
 
             <br>
-            <?php if ($is_admin || $_SESSION['user_id'] === $user['user_id']): ?>
-                <a href="/settings?username=<?= escape($user['username']) ?>" class="edit-button-profile">Edit Profile</a>
-            <?php endif; ?>
+            <a href="/settings?username=<?= escape($user['username']) ?>" class="edit-button-profile">Edit Profile</a>
 
             <style>
                 .subtitle-profile-detail {
