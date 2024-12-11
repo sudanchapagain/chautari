@@ -44,7 +44,7 @@
                 } else {
                     $user_id = $_SESSION['user_id'];
                     $db = getDbConnection();
-                    $query = "SELECT username, email, is_organizer, is_admin, profile_picture FROM users WHERE user_id = $1";
+                    $query = "SELECT username, email, is_organizer, is_admin FROM users WHERE user_id = $1";
                     $result = pg_query_params($db, $query, [$user_id]);
 
                     if (!$result) {

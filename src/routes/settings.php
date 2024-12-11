@@ -1,4 +1,5 @@
 <?php
+ob_start();
 
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) {
@@ -70,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
     <link rel="stylesheet" href="../assets/css/sign.css">
+    <link rel="stylesheet" href="../assets/css/settings.css">
 </head>
 
 <body>
@@ -105,58 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button type="submit" class="edit-button-profile">Save Changes</button>
         </form>
-        <style>
-            .subtitle-profile-detail {
-                font-size: 1rem;
-                margin-top: 1rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                color: grey;
-            }
-
-            .data-item-profile-detail {
-                font-size: 1rem;
-                font-weight: 700;
-                color: #333;
-                text-transform: initial;
-                border: 1px solid lightgrey;
-                border-radius: 4px;
-                padding: 10px;
-                margin: 5px 0;
-                background-color: #f0f0f0;
-            }
-
-            .edit-button-profile {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                text-align: center;
-                background-color: #ff4a22;
-                color: white;
-                border: none;
-                border-radius: 6px;
-                margin-top: 1rem;
-                text-decoration: none;
-                font-weight: 700;
-            }
-
-            .delete-button-profile {
-                display: block;
-                width: 100%;
-                padding: 10px;
-                text-align: center;
-                color: red;
-                border: none;
-                border-radius: 6px;
-                margin-top: 1rem;
-                text-decoration: none;
-                font-weight: 700;
-            }
-
-            form {
-                margin-bottom: 2rem;
-            }
-        </style>
     </main>
 </body>
 

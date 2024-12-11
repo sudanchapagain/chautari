@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/about.css">
 
     <style>
         nav ul li:nth-child(2) a {
@@ -57,35 +58,6 @@
                 alike.
             </p>
         </div>
-
-        <style>
-            .boxed-text {
-                border: 1px solid #f0f0f0;
-                background-color: #fafafa;
-                max-width: 750px;
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px auto;
-            }
-
-            .about-us-extended-logo {
-                max-width: 750px;
-                margin: 30px auto;
-                overflow: hidden;
-            }
-
-            .about-us-extended-logo>img {
-                width: 80%;
-                display: block;
-                margin: 0 auto;
-                object-fit: contain;
-            }
-
-            p {
-                line-height: 1.8;
-            }
-        </style>
-
     </main>
 </body>
 

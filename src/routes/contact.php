@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/contact.css">
 
     <style>
         nav ul li:nth-child(3) a {
@@ -48,22 +49,6 @@
 
             <p>We look forward to connecting with you!</p>
         </div>
-
-        <style>
-            .boxed-text {
-                border: 1px solid #f0f0f0;
-                background-color: #fafafa;
-                max-width: 750px;
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px auto;
-            }
-
-            p {
-                line-height: 1.8;
-            }
-        </style>
-
     </main>
 </body>
 

@@ -42,22 +42,6 @@ services:
     networks:
       - app-network
 
-  postgres-exporter:
-    image: wrouesnel/postgres_exporter
-    environment:
-      DATA_SOURCE_NAME: "postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?sslmode=disable"
-    ports:
-      - "9187:9187"
-    networks:
-      - app-network
-
-  php-fpm-exporter:
-    image: hipages/php-fpm_exporter
-    ports:
-      - "9253:9253"
-    networks:
-      - app-network
-
 networks:
   app-network:
 

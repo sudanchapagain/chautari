@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/dpa.css">
 </head>
 
 <body>
@@ -55,26 +56,6 @@
                 <a href="mailto:support@chautari.com">support@chautari.com</a>.
             </p>
         </div>
-
-        <style>
-            .boxed-text {
-                border: 1px solid #f0f0f0;
-                background-color: #fafafa;
-                max-width: 800px;
-                padding: 30px;
-                border-radius: 10px;
-                margin: 20px auto;
-            }
-
-            p {
-                line-height: 1.8;
-            }
-
-            h2 {
-                margin-top: 20px;
-            }
-        </style>
-
     </main>
 </body>
 

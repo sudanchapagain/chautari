@@ -7,13 +7,33 @@ $db = getDbConnection();
 $errors = [];
 
 if ($user_id) {
-    $query = "SELECT is_organizer FROM users WHERE user_id = $1";
-    $result = pg_query_params($db, $query, [$user_id]);
-    $user = pg_fetch_assoc($result);
+    try {
+        pg_query($db, "BEGIN");
 
-    if (!$user || !$user["is_organizer"]) {
-        $updateQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1";
-        pg_query_params($db, $updateQuery, [$user_id]);
+        $query = "SELECT is_organizer FROM users WHERE user_id = $1";
+        $result = pg_query_params($db, $query, [$user_id]);
+
+        if ($result) {
+            $user = pg_fetch_assoc($result);
+            if (!$user) {
+                throw new Exception("User not found.");
+            }
+
+            if (!$user["is_organizer"]) {
+                $updateQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1";
+                $updateResult = pg_query_params($db, $updateQuery, [$user_id]);
+                if (!$updateResult) {
+                    throw new Exception("Error updating user to organizer: " . pg_last_error($db));
+                }
+            }
+        } else {
+            throw new Exception("Error in SELECT query: " . pg_last_error($db));
+        }
+
+        pg_query($db, "COMMIT");
+    } catch (Exception $e) {
+        pg_query($db, "ROLLBACK");
+        error_log("Transaction failed: " . $e->getMessage());
     }
 } else {
     header("Location: /login");
@@ -32,12 +52,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $ticket_types = $_POST["ticket_types"] ?? [];
     $event_image_url = null;
 
-    if (empty($title) || empty($location) || empty($start_date) || empty($end_date) || $capacity <= 0) {
-        $errors[] = "All required fields must be filled.";
+    $titlePattern = '/^[a-zA-Z0-9\s]+$/';
+    $locationPattern = '/^[a-zA-Z0-9\s,.-]+$/';
+
+    if (empty($title) || !preg_match($titlePattern, $title)) {
+        $errors[] = "Title is required and can only contain letters, numbers, and spaces.";
+    }
+
+    if (empty($location) || !preg_match($locationPattern, $location)) {
+        $errors[] = "Location is required and can only contain letters, numbers, spaces, commas, periods, and dashes.";
+    }
+
+    if (empty($start_date)) {
+        $errors[] = "Start date is required.";
+    }
+
+    if (empty($end_date)) {
+        $errors[] = "End date is required.";
     }
 
     if (!empty($start_date) && !empty($end_date) && strtotime($start_date) >= strtotime($end_date)) {
         $errors[] = "Start date must be earlier than the end date.";
+    }
+
+    if ($capacity <= 0) {
+        $errors[] = "Capacity must be a positive number.";
     }
 
     if (!empty($_FILES['event_image']['name'])) {
@@ -112,6 +151,7 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
     <title>Create Event - Chautari</title>
     <link rel="stylesheet" href="../assets/css/default.css">
     <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/new.css">
 </head>
 
 <body>
@@ -127,12 +167,12 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
         <?php endif;?>
 
         <form action="new" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-            <label for="title">Event Title</label>
+            <label for="title">Event Title <small>*</small></label>
             <input type="text" name="title" id="title" placeholder="Internastional art exhibition by nepal art council" required>
             <div id="titleError" class="error-message"></div>
             <br>
 
-            <label for="location">Location</label>
+            <label for="location">Location <small>*</small></label>
             <input type="text" name="location" id="location" placeholder="Pradarshani marg, Kathmandu" required>
             <div id="locationError" class="error-message"></div>
             <br>
@@ -141,27 +181,20 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
             <div id="endDateError" class="error-message"></div>
             <div class="new-event-date-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                 <div>
-                    <label for="start_date">Start Date and Time</label>
+                    <label for="start_date">Start Date and Time <small>*</small></label>
                     <input type="datetime-local" name="start_date" id="start_date" required>
                     <script>
                         document.getElementById("start_date").min = new Date().toISOString().split("T")[0] + "T00:00";
                     </script>
                 </div>
                 <div>
-                    <label for="end_date">End Date and Time</label>
+                    <label for="end_date">End Date and Time <small>*</small></label>
                     <input type="datetime-local" name="end_date" id="end_date" required>
                     <script>
                         document.getElementById("end_date").min = new Date().toISOString().split("T")[0] + "T00:00";
                     </script>
                 </div>
             </div>
-            <style>
-                @media screen and (max-width: 550px) {
-                    .new-event-date-grid {
-                        grid-template-columns: 1fr !important;
-                    }
-                }
-            </style>
             <br>
 
             <label for="event_image">Event Image</label>
@@ -169,11 +202,11 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
             <span class="tooltip">Upload an image to represent the event.</span>
             <br><br>
 
-            <label for="description">Event Description</label>
+            <label for="description">Event Description <small>*</small></label>
             <textarea name="description" id="description" style="height: 200px;" required></textarea>
             <br><br>
 
-            <label for="capacity">Event Capacity</label>
+            <label for="capacity">Event Capacity <small>*</small></label>
             <input type="number" name="capacity" id="capacity" placeholder="Specify the maximum number of attendees." required min="1">
             <div id="capacityError" class="error-message"></div>
             <br><br>
@@ -197,119 +230,7 @@ $categories = pg_fetch_all($categoriesResult) ?: [];
             <button class="button-new" type="submit">Create Event</button>
         </form>
 
-        <script>
-            function validateForm() {
-                let isValid = true;
-                let title = document.getElementById("title").value.trim();
-                let location = document.getElementById("location").value.trim();
-                let startDate = document.getElementById("start_date").value;
-                let endDate = document.getElementById("end_date").value;
-                let capacity = document.getElementById("capacity").value;
-
-                clearErrors();
-
-                if (title === "") {
-                    document.getElementById("titleError").innerText = "Title is required.";
-                    isValid = false;
-                }
-
-                if (location === "") {
-                    document.getElementById("locationError").innerText = "Location is required.";
-                    isValid = false;
-                }
-
-                if (startDate === "") {
-                    document.getElementById("startDateError").innerText = "Start date is required.";
-                    isValid = false;
-                }
-
-                if (endDate === "") {
-                    document.getElementById("endDateError").innerText = "End date is required.";
-                    isValid = false;
-                }
-
-                if (new Date(startDate) >= new Date(endDate)) {
-                    document.getElementById("endDateError").innerText = "End date must be after start date.";
-                    isValid = false;
-                }
-
-                if (capacity <= 0) {
-                    document.getElementById("capacityError").innerText = "Capacity must be a positive number.";
-                    isValid = false;
-                }
-
-                return isValid;
-            }
-
-            function clearErrors() {
-                document.getElementById("titleError").innerText = "";
-                document.getElementById("locationError").innerText = "";
-                document.getElementById("startDateError").innerText = "";
-                document.getElementById("endDateError").innerText = "";
-                document.getElementById("capacityError").innerText = "";
-            }
-        </script>
-    <style>
-        form {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-        .button-new {
-            margin-top: 20px;
-            padding: 10px 15px;
-            font-size: 1em;
-            border-radius: 4px;
-            background-color: #000000;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        .button-secondary-new {
-            background-color: #f9f9f9 !important;
-            color: #000000 !important;
-            border: 1px solid #555 !important;
-            padding: 6px 10px !important;
-        }
-
-        .button-secondary-new:hover {
-            background-color: #555 !important;
-            color: #f9f9f9 !important;
-        }
-
-        .tooltip {
-            font-size: 0.8em;
-            color: #777;
-        }
-
-    </style>
+        <script src="../assets/js/new-event-validation.js"></script>
     </main>
 </body>
 

@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/credentials.php';
 
@@ -10,6 +11,7 @@ if ($event_id <= 0) {
     header('Location: /explore');
     exit();
 }
+error_log("event_id: $event_id, action: $action");
 
 $imageQuery = "SELECT image_url FROM event_images WHERE event_id = $1 LIMIT 1";
 $imageResult = pg_query_params($db, $imageQuery, [$event_id]);
@@ -39,13 +41,57 @@ if (!$result) {
     }
 }
 
-$user_id = $_SESSION['user_id'] ?? null;
-$is_admin = $_SESSION['is_admin'] ?? false;
-$is_organizer = $user_id === $event['organizer_id'] || $is_admin;
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    $query = "SELECT is_admin, is_organizer FROM users WHERE user_id = $1 LIMIT 1";
+    $result = pg_query_params($db, $query, [$user_id]);
+
+    if ($result) {
+        $user = pg_fetch_assoc($result);
+        if ($user) {
+            $_SESSION['is_admin'] = $user['is_admin'];
+            $_SESSION['is_organizer'] = $user['is_organizer'];
+        } else {
+            $_SESSION['is_admin'] = false;
+            $_SESSION['is_organizer'] = false;
+        }
+    } else {
+        error_log("Database Error: " . pg_last_error($db));
+        $_SESSION['is_admin'] = false;
+        $_SESSION['is_organizer'] = false;
+    }
+} else {
+    $_SESSION['is_admin'] = false;
+    $_SESSION['is_organizer'] = false;
+    $user_id = null;
+}
+
+$is_admin = $_SESSION['is_admin'];
+$is_organizer = $_SESSION['is_organizer'];
+$is_event_organizer = ($is_organizer && $_SESSION['user_id'] == $event['organizer_id']);
 
 $bookingQuery = "SELECT 1 FROM user_event_attendance WHERE user_id = $1 AND event_id = $2 LIMIT 1";
 $bookingResult = pg_query_params($db, $bookingQuery, [$user_id, $event_id]);
 $is_booked = pg_num_rows($bookingResult) > 0;
+
+if ($action === 'register' && !$is_booked && $event['ticket_price'] == 0) {
+    $addQuery = "
+        INSERT INTO user_event_attendance (user_id, event_id)
+        VALUES ($1, $2)
+        ON CONFLICT DO NOTHING
+    ";
+    $result = pg_query_params($db, $addQuery, [$user_id, $event_id]);
+
+    if ($result) {
+        $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
+    } else {
+        $_SESSION['transaction_msg'] = "Error registering for the event.";
+    }
+
+    header("Location: /event?event_id=$event_id");
+    exit();
+}
 
 if ($action === 'cancel' && $is_booked) {
     $cancelQuery = "DELETE FROM user_event_attendance WHERE user_id = $1 AND event_id = $2";
@@ -61,35 +107,100 @@ if ($action === 'cancel' && $is_booked) {
     exit();
 }
 
-if ($action === 'pay' && isset($_SESSION['user_id']) && !$is_booked) {
+if ($action === 'pay' && isset($_SESSION['user_id']) && !$is_booked && $event['ticket_price'] > 0) {
     if ($event['capacity'] > $event['current_participants']) {
-        $addQuery = "
-            INSERT INTO user_event_attendance (user_id, event_id)
-            VALUES ($1, $2)
-            ON CONFLICT DO NOTHING
-        ";
-        pg_query_params($db, $addQuery, [$user_id, $event_id]);
-        $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
+        $paymentData = [
+            'token' => $_POST['token'],
+            'amount' => $event['ticket_price'] * 100
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://dev.khalti.com/api/v2/payment/verify/");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($paymentData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Key " . $KHALTI_SECRET_KEY
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $responseData = json_decode($response, true);
+        if ($responseData['idx']) {
+            $addQuery = "
+                INSERT INTO user_event_attendance (user_id, event_id)
+                VALUES ($1, $2)
+                ON CONFLICT DO NOTHING
+            ";
+            pg_query_params($db, $addQuery, [$user_id, $event_id]);
+            $_SESSION['transaction_msg'] = "You have successfully registered for the event.";
+        } else {
+            $_SESSION['transaction_msg'] = "Payment failed. Please try again.";
+        }
+
     } else {
         $_SESSION['transaction_msg'] = "Sorry, the event is fully booked.";
     }
-    header("Location: /event?event_id=$event_id");
-    exit();
 }
 
-if ($action === 'delete' && $is_organizer) {
-    $deleteQuery = "DELETE FROM events WHERE event_id = $1";
-    $deleteResult = pg_query_params($db, $deleteQuery, [$event_id]);
+if ($action === 'delete' && ($is_event_organizer || $is_admin)) {
+    $deleteAttendanceQuery = "DELETE FROM user_event_attendance WHERE event_id = $1";
+    $deleteImagesQuery = "DELETE FROM event_images WHERE event_id = $1";
+    $deleteDatesQuery = "DELETE FROM event_dates WHERE event_id = $1";
+    $deleteEventQuery = "DELETE FROM events WHERE event_id = $1";
 
-    if ($deleteResult) {
+    $deleteAttendanceResult = pg_query_params($db, $deleteAttendanceQuery, [$event_id]);
+    $deleteImagesResult = pg_query_params($db, $deleteImagesQuery, [$event_id]);
+    $deleteDatesResult = pg_query_params($db, $deleteDatesQuery, [$event_id]);
+    $deleteEventResult = pg_query_params($db, $deleteEventQuery, [$event_id]);
+
+    if ($deleteEventResult) {
         $_SESSION['transaction_msg'] = "Event successfully deleted.";
     } else {
-        $_SESSION['transaction_msg'] = "Error deleting event.";
+        $_SESSION['transaction_msg'] = "Error deleting event." . pg_last_error($db);
     }
 
     header('Location: /explore');
     exit();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_event'])) {
+    try {
+        $title = trim($_POST['title']);
+        $location = trim($_POST['location']);
+        $description = trim($_POST['description']);
+        $capacity = (int)$_POST['capacity'];
+        $ticket_price = (float)$_POST['ticket_price'];
+
+        if (!$title || !$location || !$description || $capacity <= 0 || $ticket_price <= 0) {
+            throw new Exception("Invalid input data");
+        }
+
+        $updateQuery = "
+            UPDATE events
+            SET title = $1, location = $2, description = $3, capacity = $4, ticket_price = $5
+            WHERE event_id = $6 AND organizer_id = $7
+        ";
+
+        $result = pg_query_params($db, $updateQuery, [
+            $title, $location, $description, $capacity, $ticket_price, $event_id, $_SESSION['user_id']
+        ]);
+
+        if (!$result) {
+            throw new Exception("Failed to update event: " . pg_last_error($db));
+        }
+
+        $_SESSION['transaction_msg'] = "Event updated successfully.";
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        $_SESSION['transaction_msg'] = $e->getMessage();
+    }
+
+    header("Location: /event?event_id=$event_id");
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +210,8 @@ if ($action === 'delete' && $is_organizer) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($event['title'] ?? 'Event Details') ?> - Chautari</title>
     <link rel="stylesheet" href="../assets/css/default.css">
-    <link rel="stylesheet" href="../assets/css/index.css">
+    <link rel="stylesheet" href="../assets/css/index.css">`
+    <link rel="stylesheet" href="../assets/css/event.css">`
 </head>
 <body>
     <?php include __DIR__ . '/../components/header.php'; ?>
@@ -110,7 +222,7 @@ if ($action === 'delete' && $is_organizer) {
         <?php else: ?>
             <div class="event-details boxed-text">
                 <?php if ($image && isset($image['image_url'])): ?>
-                    <img src="<?= htmlspecialchars($image['image_url']); ?>" width="100%" style="height: 400px;border-radius: 12px;border: 1px solid black;margin-top: 5rem;">
+                    <img src="<?= htmlspecialchars($image['image_url']); ?>" width="100%" style="height: 400px; border-radius: 12px;border: 1px solid black; margin-top: 5rem;">
                 <?php else: ?>
                     <div style="display: block; height: 100px"></div>
                 <?php endif; ?>
@@ -118,9 +230,9 @@ if ($action === 'delete' && $is_organizer) {
                 <h2 style="text-align: left;font-size: 3rem;"><?= htmlspecialchars($event['title']) ?></h2>
                 <br>
                 <div class="event-meta" style="display: grid;grid-template-columns: 1fr 1fr 1fr;">
-                    <p><b>Organized by:</b> <?= htmlspecialchars($event['organizer_name'] ?? 'Unknown') ?></p>
-                    <p><b>Location:</b> <?= htmlspecialchars($event['location']) ?></p>
-                    <p><b>Capacity:</b> <?= $event['capacity'] ?> (Available: <?= $event['capacity'] - $event['current_participants'] ?>)</p>
+                    <p><b>Organizer:</b> <?= htmlspecialchars($event['organizer_name'] ?? 'Unknown') ?></p>
+                    <p><b>Address:</b> <?= htmlspecialchars($event['location']) ?></p>
+                    <p><b>Available Capacity: </b><?= $event['capacity'] - $event['current_participants'] ?></p>
                 </div>
 
                 <br><br>
@@ -128,7 +240,6 @@ if ($action === 'delete' && $is_organizer) {
 
                 <div class="event-actions" style="margin: 50px auto; max-width: 400px; display: flex; gap: 10px;">
                     <?php if ($is_booked): ?>
-                        <p>You have already registered for this event.</p>
                         <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
                             <input type="hidden" name="event_id" value="<?= $event_id ?>">
                             <input type="hidden" name="action" value="cancel">
@@ -137,22 +248,50 @@ if ($action === 'delete' && $is_organizer) {
                     <?php elseif (!isset($_SESSION['user_id'])): ?>
                         <p><a href="/login" class="secondary-button">Login to register for this event</a></p>
                     <?php else: ?>
-                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
-                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
-                            <input type="hidden" name="action" value="pay">
-                            <button type="submit" class="primary-button register-btn" style="border: none;">Book Event</button>
-                        </form>
+                        <?php if ($event['ticket_price'] == 0): ?>
+                            <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                                <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                                <input type="hidden" name="action" value="register">
+                                <button type="submit" class="primary-button register-btn" style="border: none;">Book Event</button>
+                            </form>
+                        <?php else: ?>
+                            <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
+                                <input type="hidden" name="event_id" value="<?= $event_id ?>">
+                                <input type="hidden" name="action" value="pay">
+                                <button type="button" class="primary-button register-btn" id="pay-button" style="border: none;">Book Event</button>
+                            </form>
+                        <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php if ($is_organizer): ?>
-                        <a href="/event/edit?event_id=<?= $event_id ?>" class="primary-button" style="background-color: #007BFF;">Update</a>
-                        <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
-                            <input type="hidden" name="event_id" value="<?= $event_id ?>">
-                            <input type="hidden" name="action" value="delete">
-                            <button type="submit" class="secondary-button" style="background-color: #E81C30; border:none; color: #fff;">Delete</button>
-                        </form>
-                    <?php elseif ($is_admin): ?>
-                        <a href="/event/edit?event_id=<?= $event_id ?>" class="primary-button" style="background-color: #007BFF;">Update</a>
+                    <?php if ($is_event_organizer): ?>
+                        <a href="javascript:void(0);" class="primary-button" style="background-color: #007BFF;" onclick="openModal()">Update</a>
+                        <div id="editEventModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal()">&times;</span>
+                                <h2>Edit Event Details</h2>
+                                <form id="editEventForm" action="/event?event_id=<?= $event_id ?>" method="POST" enctype="multipart/form-data">
+                                   <input type="hidden" name="edit_event" value="1">
+
+                                    <label for="title">Event Title:</label>
+                                    <input type="text" id="title" name="title" value="<?= htmlspecialchars($event['title']) ?>" required><br><br>
+
+                                    <label for="location">Location:</label>
+                                    <input type="text" id="location" name="location" value="<?= htmlspecialchars($event['location']) ?>" required><br><br>
+
+                                    <label for="description">Description:</label>
+                                    <textarea id="description" name="description"><?= htmlspecialchars($event['description']) ?></textarea><br><br>
+
+                                    <label for="capacity">Capacity:</label>
+                                    <input type="number" id="capacity" name="capacity" value="<?= htmlspecialchars($event['capacity']) ?>" required><br><br>
+
+                                    <label for="ticket_price">Ticket Price:</label>
+                                    <input type="number" id="ticket_price" name="ticket_price" value="<?= htmlspecialchars($event['ticket_price']) ?>" step="0.01" required><br><br>
+
+                                    <button type="submit" style="border: none;" class="primary-button">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+
                         <form action="/event?event_id=<?= $event_id ?>" method="GET" style="margin: 0;">
                             <input type="hidden" name="event_id" value="<?= $event_id ?>">
                             <input type="hidden" name="action" value="delete">
@@ -163,36 +302,15 @@ if ($action === 'delete' && $is_organizer) {
 
                 <div class="event-description">
                     <h2>Description</h2>
-                    <p><?= nl2br(htmlspecialchars($event['description'])) ?></p>
+                    <p><?= nl2br(htmlspecialchars($event['description'] ?? 'No description available.')) ?></p>
                 </div>
             </div>
         <?php endif; ?>
     </main>
 
-    <style>
-        main {
-            max-width: 750px;
-            margin: 0 auto;
-        }
-
-        .event-description {
-            background-color: #f0f0f0;
-            border-radius: 12px;
-            padding: 1rem;
-            margin: 2rem 0;
-        }
-
-        .event-description > h2 {
-            color: #555;
-        }
-
-        .event-actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-    </style>
-
     <?php include __DIR__ . '/../components/footer.php'; ?>
+    <script src="../assets/js/event-modal.js"></script>
+    <script src="https://khalti.com/static/khalti-checkout.js"></script>
+    <script src="../assets/js/event-khalti.js"></script>
 </body>
 </html>
