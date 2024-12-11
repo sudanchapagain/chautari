@@ -88,7 +88,7 @@ function safe_htmlspecialchars($value)
             <hr>
 
             <ul class="nav-items">
-                <li class="<?= isActive($tab, 'dashboard') ?>"><a href="/dashboard?tab=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                <li class="<?=isActive($tab, 'dashboard')?>"><a href="/dashboard?tab=dashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <g opacity=".2">
                                     <path fill-rule="evenodd" d="M8 4.351c0-.47.414-.851.926-.851h6.148c.512 0 .926.381.926.851V7.65c0 .47-.414.851-.926.851H8.926C8.414 8.5 8 8.119 8 7.649V4.35Z" clip-rule="evenodd" />
@@ -100,16 +100,16 @@ function safe_htmlspecialchars($value)
                         </svg>Dashboard</a></li>
 
                 <?php if (!userHasPermission($user_id, 'admin')): ?>
-                        <li class="<?= isActive($tab, 'bookings') ?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
+                        <li class="<?=isActive($tab, 'bookings')?>"><a href="/dashboard?tab=bookings"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:3px; middle;margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <path d="m11 5.79l7.314-1.27a1.5 1.5 0 0 1 .242-.02c.801 0 1.444.664 1.444 1.475v9.786c0 .72-.511 1.34-1.213 1.456l-7.705 1.276a.499.499 0 0 1-.18-.002l-7.647-1.267A1.5 1.5 0 0 1 2 15.744V6.011a1.5 1.5 0 0 1 1.756-1.478L11 5.79Z" opacity=".2" />
                                 <path fill-rule="evenodd" d="M10.08 4.304L2.244 3.019A1.5 1.5 0 0 0 .5 4.5v9.738a1.5 1.5 0 0 0 1.268 1.482l8.155 1.275a.5.5 0 0 0 .577-.494V4.797a.5.5 0 0 0-.42-.493Zm-8-.298L9.5 5.222v10.694L1.923 14.73a.5.5 0 0 1-.423-.493V4.5a.5.5 0 0 1 .58-.494Z" clip-rule="evenodd" />
                                 <path fill-rule="evenodd" d="M18 3a1.5 1.5 0 0 0-.243.02L9.92 4.303a.5.5 0 0 0-.419.493V16.5a.5.5 0 0 0 .577.494l8.155-1.275a1.5 1.5 0 0 0 1.268-1.482V4.5A1.5 1.5 0 0 0 18 3Zm.077 11.73L10.5 15.916V5.222l7.42-1.216a.501.501 0 0 1 .58.494v9.737a.5.5 0 0 1-.423.493Z" clip-rule="evenodd" />
                             </g>
                         </svg>Bookings</a></li>
-                    <?php endif; ?>
+                    <?php endif;?>
                 <?php if (!userHasPermission($user_id, 'admin')): ?>
-                <li class="<?= isActive($tab, 'sales') ?>"><a href="/dashboard?tab=sales"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                <li class="<?=isActive($tab, 'sales')?>"><a href="/dashboard?tab=sales"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                             <g fill="currentColor">
                                 <path fill-rule="evenodd" d="M5.219 2.75H4.2a.75.75 0 0 1 0-1.5h1.603a.75.75 0 0 1 .727.566l1.502 5.937a1.998 1.998 0 0 1 .974-.253h7.989a2.012 2.012 0 0 1 1.955 2.468l-.783 3.461A2.009 2.009 0 0 1 16.21 15H9.79a2.008 2.008 0 0 1-1.956-1.57L7.05 9.967a2.058 2.058 0 0 1-.027-.145a.754.754 0 0 1-.05-.14L5.219 2.75ZM9.25 18.5a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Zm7 0a1.75 1.75 0 1 0 0-3.5a1.75 1.75 0 0 0 0 3.5Z" clip-rule="evenodd" opacity=".2" />
                                 <path d="M3.712 2.5H2.5a.5.5 0 0 1 0-1h1.603a.5.5 0 0 1 .485.379l1.897 7.6a.5.5 0 0 1-.97.242L3.712 2.5Z" />
@@ -117,19 +117,19 @@ function safe_htmlspecialchars($value)
                                 <path d="M17 16.75a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Zm-7 0a1.75 1.75 0 1 1-3.5 0a1.75 1.75 0 0 1 3.5 0Z" />
                             </g>
                         </svg>Sales</a></li>
-                <?php endif; ?>
+                <?php endif;?>
                 <?php if (userHasPermission($user_id, 'admin')): ?>
-                    <li class="<?= isActive($tab, 'moderation') ?>"><a href="/dashboard?tab=moderation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                    <li class="<?=isActive($tab, 'moderation')?>"><a href="/dashboard?tab=moderation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                                 <g fill="currentColor">
                                     <path d="m8 4.97l.954-.396a4 4 0 0 1 2.908.058l1.482.613a4 4 0 0 0 2.693.13l.893-.271A1.604 1.604 0 0 1 19 6.638V10.7a3.22 3.22 0 0 1-1.66 2.817l-.734.407a4 4 0 0 1-3.88 0l-.453-.251a4 4 0 0 0-3.88 0l-.226.126c-.055.03-.11.056-.167.079V19a1 1 0 1 1-2 0V5a1 1 0 0 1 1-1c.81 0 1 .97 1 .97Z" opacity=".2" />
                                     <path fill-rule="evenodd" d="m6.804 2.632l-.637.264A3.507 3.507 0 0 0 4 6.137v4.386a1.46 1.46 0 0 0 2.167 1.276l.227-.126a4 4 0 0 1 3.88 0l.453.251a4 4 0 0 0 3.88 0l.734-.407A3.222 3.222 0 0 0 17 8.7V4.638a1.605 1.605 0 0 0-2.07-1.534l-.893.272a4 4 0 0 1-2.694-.13l-1.48-.614a4 4 0 0 0-3.059 0ZM5 6.137c0-1.014.611-1.929 1.549-2.317l.638-.264a3 3 0 0 1 2.293 0l1.481.613a5 5 0 0 0 3.367.163l.893-.271a.604.604 0 0 1 .779.577V8.7c0 .807-.438 1.551-1.144 1.943l-.735.407a3 3 0 0 1-2.91 0l-.453-.252a5 5 0 0 0-4.85 0l-.226.126A.46.46 0 0 1 5 10.523V6.137Z" clip-rule="evenodd" />
                                     <path fill-rule="evenodd" d="M5 2a1 1 0 0 1 1 1v14a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Z" clip-rule="evenodd" />
                                 </g>
                             </svg>Moderation</a></li>
-                <?php endif; ?>
+                <?php endif;?>
 
                 <?php if (userHasPermission($user_id, 'admin')): ?>
-                    <li class="<?= isActive($tab, 'posts') ?>"><a href="/dashboard?tab=posts"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
+                    <li class="<?=isActive($tab, 'posts')?>"><a href="/dashboard?tab=posts"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="vertical-align: middle; margin-bottom:5px; margin-right: 0.5rem;" viewBox="0 0 20 20">
                                 <g fill="currentColor">
                                     <g opacity=".2">
                                         <path d="M17 3h-7a2 2 0 0 0-2 2v13.5A1.5 1.5 0 0 0 9.5 20H17a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z" />
@@ -149,45 +149,45 @@ function safe_htmlspecialchars($value)
                                     <path fill-rule="evenodd" d="M4.67 11.65a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0Zm.75 1.75a1.75 1.75 0 1 1 0-3.5a1.75 1.75 0 0 1 0 3.5Z" clip-rule="evenodd" />
                                 </g>
                             </svg>Manage Posts</a></li>
-                <?php endif; ?>
+                <?php endif;?>
 
             </ul>
         </div>
 
         <div class="main-content">
             <?php
-            $db = getDbConnection();
-            $user_id = $_SESSION['user_id'];
-            $query = "SELECT is_admin FROM users WHERE user_id = $1";
-            $result = pg_query_params($db, $query, [$user_id]);
-            $is_admin = false;
+$db = getDbConnection();
+$user_id = $_SESSION['user_id'];
+$query = "SELECT is_admin FROM users WHERE user_id = $1";
+$result = pg_query_params($db, $query, [$user_id]);
+$is_admin = false;
 
-            if ($result) {
-                $user = pg_fetch_assoc($result);
-                    if (userHasPermission($user_id, 'admin')) {
-                    $is_admin = true;
-                }
-            } else {
-                echo "<p>Error fetching user information.</p>";
-                exit();
-            }
+if ($result) {
+    $user = pg_fetch_assoc($result);
+    if (userHasPermission($user_id, 'admin')) {
+        $is_admin = true;
+    }
+} else {
+    echo "<p>Error fetching user information.</p>";
+    exit();
+}
 
 switch ($tab) {
     case 'bookings':
-        echo "<h1>Bookings</h1>";
-
+        echo "<h1>Event Bookings</h1>";
         $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
         if (!$connection) {
             die('Error: Unable to connect to the database.');
         }
+
         $organizerId = $_SESSION['user_id'];
 
-        $query = "SELECT e.event_id, e.title AS event_title, e.ticket_price, u.user_id, u.username, u.profile_picture, u.email, u.user_phone, a.status 
-          FROM events e 
-          JOIN user_event_attendance a ON e.event_id = a.event_id 
-          JOIN users u ON a.user_id = u.user_id 
-          WHERE e.organizer_id = $1 
-          ORDER BY e.event_id, u.username";
+        $query = "SELECT e.event_id, e.title AS event_title, e.ticket_price, u.user_id, u.username, u.profile_picture, u.email, u.user_phone, a.status
+                              FROM events e
+                              JOIN user_event_attendance a ON e.event_id = a.event_id
+                              JOIN users u ON a.user_id = u.user_id
+                              WHERE e.organizer_id = $1
+                              ORDER BY e.event_id, u.username";
 
         $result = pg_query_params($connection, $query, [$organizerId]);
 
@@ -196,72 +196,379 @@ switch ($tab) {
             die("Query failed: $error");
         }
 
-        $data = [];
-        while ($row = pg_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-
         $events = [];
-        foreach ($data as $row) {
+        while ($row = pg_fetch_assoc($result)) {
             $event_id = $row['event_id'];
             if (!isset($events[$event_id])) {
-                $events[$event_id] = ['title' => $row['event_title'], 'ticket_price' => $row['ticket_price'], 'attendees' => []];
+                $events[$event_id] = [
+                    'title' => $row['event_title'],
+                    'ticket_price' => $row['ticket_price'],
+                    'attendees' => [],
+                ];
             }
             $events[$event_id]['attendees'][] = $row;
         }
-        echo "<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css' rel='stylesheet'>
-              <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js'></script>";
 
-echo "<div class='accordion' id='eventAccordion'>";
-foreach ($events as $event_id => $event) {
-    $accordion_id = "event_$event_id";
-    echo "
-    <div class='accordion-item'>
-        <h2 class='accordion-header' id='heading_$accordion_id'>
-            <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapse_$accordion_id' aria-expanded='true' aria-controls='collapse_$accordion_id'>
-                {$event['title']} (Ticket Price: {$event['ticket_price']})
-            </button>
-        </h2>
-        <div id='collapse_$accordion_id' class='accordion-collapse collapse' aria-labelledby='heading_$accordion_id' data-bs-parent='#eventAccordion'>
-            <div class='accordion-body'>
-                <table class='table table-bordered'>
-                    <thead>
-                        <tr>
-                            <th>Attendee ID</th>
-                            <th>Username</th>
-                            <th>Profile Picture</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
-    foreach ($event['attendees'] as $attendee) {
-        echo "
-                        <tr>
-                            <td>{$attendee['user_id']}</td>
-                            <td>{$attendee['username']}</td>
-                            <td><img src='{$attendee['profile_picture']}' alt='Profile Picture' width='50'></td>
-                            <td>{$attendee['email']}</td>
-                            <td>{$attendee['user_phone']}</td>
-                            <td>{$attendee['status']}</td>
-                        </tr>";
-    }
-    echo "
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>";
-}
-echo "</div>";
+        $eventCounter = 1;
+
+        foreach ($events as $event) {
+            $event_title = $event['title'];
+            $ticket_price = $event['ticket_price'];
+
+            echo "<h2>$event_title</h2>";
+
+            $tableId = "bookingsTable_" . $eventCounter;
+
+            echo "<table class='table table-striped' id='$tableId'>";
+            echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
+
+            foreach ($event['attendees'] as $attendee) {
+                $username = $attendee['username'];
+                $email = $attendee['email'];
+                $user_phone = $attendee['user_phone'];
+                $status = $attendee['status'];
+
+                echo "<tr>";
+                echo "<td>$username</td>";
+                echo "<td>$email</td>";
+                echo "<td>$user_phone</td>";
+                echo "<td class='status $status'>$status</td>";
+                echo "</tr>";
+            }
+
+            echo "</tbody></table>";
+            echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Bookings</button><br><br>";
+            $eventCounter++;
+        }
+
+        echo "<style>
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin: 20px 0;
+                                    font-family: 'Arial', sans-serif;
+                                }
+
+                                thead {
+                                    background-color: #f4f4f9;
+                                    color: #333;
+                                }
+
+                                th, td {
+                                    padding: 12px 15px;
+                                    text-align: left;
+                                    border: 1px solid #ddd;
+                                }
+
+                                th {
+                                    font-weight: bold;
+                                    text-transform: uppercase;
+                                }
+
+                                tbody tr {
+                                    background-color: #ffffff;
+                                }
+
+                                tbody tr:hover {
+                                    background-color: #f9f9f9;
+                                    cursor: pointer;
+                                }
+
+                                tbody tr:nth-child(even) {
+                                    background-color: #f9f9f9;
+                                }
+
+                                td {
+                                    font-size: 14px;
+                                    color: #555;
+                                }
+
+                                tbody tr:hover {
+                                    background-color: #eef;
+                                }
+
+                                td.status {
+                                    font-weight: bold;
+                                }
+
+                                td.status.confirmed {
+                                    color: green;
+                                    background-color: #eaf6ea;
+                                    padding: 5px;
+                                    border-radius: 4px;
+                                }
+
+                                td.status.pending {
+                                    color: orange;
+                                    background-color: #fff3e0;
+                                    padding: 5px;
+                                    border-radius: 4px;
+                                }
+
+                                td.status.cancelled {
+                                    color: red;
+                                    background-color: #fddede;
+                                    padding: 5px;
+                                    border-radius: 4px;
+                                }
+
+                                td:nth-child(1), td:nth-child(2) {
+                                    width: 20%;
+                                }
+
+                                td:nth-child(3), td:nth-child(4), td:nth-child(5) {
+                                    width: 15%;
+                                }
+
+                                table {
+                                    margin-top: 30px;
+                                }
+
+                                .container {
+                                    padding: 20px;
+                                    background-color: #f8f9fa;
+                                    border-radius: 8px;
+                                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                                }
+
+                                table {
+                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                                }
+
+                                @media screen and (max-width: 768px) {
+                                    table {
+                                        font-size: 12px;
+                                    }
+
+                                    th, td {
+                                   padding: 8px;
+                                    }
+                                }
+                    </style>
+                    <script>
+                    function printTable(tableId) {
+                        var printContent = document.getElementById(tableId).outerHTML;
+                        var newWindow = window.open('', '', 'width=800, height=600');
+                        newWindow.document.write('<html><head><title>Print Table</title></head><body>');
+                        newWindow.document.write(printContent);
+                        newWindow.document.write('<script>window.print(); window.close();</' + 'script>');
+                        newWindow.document.write('</body></html>');
+                        newWindow.document.close();
+                    }
+                    </script>
+                    ";
+
+
         break;
 
     case 'sales':
         echo "<h1>Sales</h1>";
-        // TODO: SHOW TOTAL REVENUE
-        break;
 
+        $connection = pg_connect('host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME . ' user=' . DB_USER . ' password=' . DB_PASS);
+        if (!$connection) {
+            die('Error: Unable to connect to the database.');
+        }
+
+        $organizerId = $_SESSION['user_id'];
+
+        $query = "
+                        SELECT
+                            e.event_id,
+                            e.title AS event_title,
+                            e.ticket_price,
+                            COUNT(a.user_id) AS attendee_count,
+                            SUM(CASE WHEN a.status = 'confirmed' THEN e.ticket_price ELSE 0 END) AS total_revenue
+                        FROM events e
+                        LEFT JOIN user_event_attendance a ON e.event_id = a.event_id
+                        WHERE e.organizer_id = $1
+                        GROUP BY e.event_id
+                        ORDER BY e.event_id
+                    ";
+
+        $result = pg_query_params($connection, $query, [$organizerId]);
+
+        if (!$result) {
+            $error = pg_last_error($connection);
+            die("Query failed: $error");
+        }
+
+        $eventCounter = 1;
+
+        while ($row = pg_fetch_assoc($result)) {
+            $event_title = $row['event_title'];
+            $ticket_price = $row['ticket_price'];
+            $attendee_count = $row['attendee_count'];
+            $total_revenue = $row['total_revenue'];
+
+            if ($ticket_price == 0) {
+                echo "<br><h2>$event_title</h2>";
+                echo "<br><p>This is a free event, so no revenue is generated.</p><br><br>";
+                continue;
+            }
+
+            echo "<h2>$event_title</h2> <br>";
+            echo "<p><b>Ticket Price</b>: NPR $ticket_price</p>";
+            echo "<p><b>Number of Attendees</b>: $attendee_count</p>";
+            echo "<p><b>Total Revenue</b>: NPR $total_revenue</p>";
+
+            $attendance_query = "
+                            SELECT u.username, u.email, u.user_phone, a.status
+                            FROM user_event_attendance a
+                            JOIN users u ON a.user_id = u.user_id
+                            WHERE a.event_id = $1
+                            ORDER BY u.username
+                        ";
+
+            $attendance_result = pg_query_params($connection, $attendance_query, [$row['event_id']]);
+
+            if (!$attendance_result) {
+                $error = pg_last_error($connection);
+                die("Query failed: $error");
+            }
+
+            $tableId = "salesTable_" . $eventCounter;
+
+            echo "<table class='table table-striped' id='$tableId'>";
+            echo "<thead><tr><th>Attendee</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead><tbody>";
+
+            while ($attendee = pg_fetch_assoc($attendance_result)) {
+                $username = $attendee['username'];
+                $email = $attendee['email'];
+                $user_phone = $attendee['user_phone'];
+                $status = $attendee['status'];
+
+                echo "<tr>";
+                echo "<td>$username</td>";
+                echo "<td>$email</td>";
+                echo "<td>$user_phone</td>";
+                echo "<td class='status $status'>$status</td>";
+                echo "</tr>";
+            }
+
+            echo "</tbody></table>";
+            echo "<button onclick='printTable(\"$tableId\")' style='padding: 5px 10px; color: lightgrey; border:none; border-radius:50px; color:black;'>Print Sales</button><br><br>";
+
+            $eventCounter++;
+        }
+
+        echo "<style>
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                            font-family: 'Arial', sans-serif;
+                        }
+
+                        thead {
+                            background-color: #f4f4f9;
+                            color: #333;
+                        }
+
+                        th, td {
+                            padding: 12px 15px;
+                            text-align: left;
+                            border: 1px solid #ddd;
+                        }
+
+                        th {
+                            font-weight: bold;
+                            text-transform: uppercase;
+                        }
+
+                        tbody tr {
+                            background-color: #ffffff;
+                        }
+
+                        tbody tr:hover {
+                            background-color: #f9f9f9;
+                            cursor: pointer;
+                        }
+
+                        tbody tr:nth-child(even) {
+                            background-color: #f9f9f9;
+                        }
+
+                        td {
+                            font-size: 14px;
+                            color: #555;
+                        }
+
+                        tbody tr:hover {
+                            background-color: #eef;
+                        }
+
+                        td.status {
+                            font-weight: bold;
+                        }
+
+                        td.status.confirmed {
+                            color: green;
+                            background-color: #eaf6ea;
+                            padding: 5px;
+                            border-radius: 4px;
+                        }
+
+                        td.status.pending {
+                            color: orange;
+                            background-color: #fff3e0;
+                            padding: 5px;
+                            border-radius: 4px;
+                        }
+
+                        td.status.cancelled {
+                            color: red;
+                            background-color: #fddede;
+                            padding: 5px;
+                            border-radius: 4px;
+                        }
+
+                        td:nth-child(1), td:nth-child(2) {
+                            width: 20%;
+                        }
+
+                        td:nth-child(3), td:nth-child(4), td:nth-child(5) {
+                            width: 15%;
+                        }
+
+                        table {
+                            margin-top: 30px;
+                        }
+
+                        .container {
+                            padding: 20px;
+                            background-color: #f8f9fa;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                        }
+
+                        table {
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+
+                        @media screen and (max-width: 768px) {
+                            table {
+                                font-size: 12px;
+                            }
+
+                            th, td {
+                                padding: 8px;
+                            }
+                        }
+                    </style>
+
+                    <script>
+                    function printTable(tableId) {
+                        var printContent = document.getElementById(tableId).outerHTML;
+                        var newWindow = window.open('', '', 'width=800, height=600');
+                        newWindow.document.write('<html><head><title>Print Table</title></head><body>');
+                        newWindow.document.write(printContent);
+                        newWindow.document.write('<script>window.print(); window.close();</' + 'script>');
+                        newWindow.document.write('</body></html>');
+                        newWindow.document.close();
+                    }
+                    </script>
+                    ";
+        break;
     case 'moderation':
         echo "<h1>Moderation</h1>";
         if (!$is_admin) {
@@ -483,186 +790,186 @@ echo "</div>";
     default:
         echo "<h1>Dashboard</h1>";
         if (!userHasPermission($user_id, 'admin')):
-        echo "<div>
-        <style>
-    .bento-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto;
-      gap: 16px;
-      max-width: 750px;
-      padding: 24px;
-      background: #ffffff;
-      border-radius: 24px;
-      margin: 0 auto;
-    }
+            echo "<div>
+	        <style>
+	    .bento-container {
+	      display: grid;
+	      grid-template-columns: 1fr 1fr 1fr;
+	      grid-template-rows: auto;
+	      gap: 16px;
+	      max-width: 750px;
+	      padding: 24px;
+	      background: #ffffff;
+	      border-radius: 24px;
+	      margin: 0 auto;
+	    }
 
-    .bento-item {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
-      padding: 24px;
-      background: #f5f5f7;
-      border: 1px solid #e0e0e0;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-    }
+	    .bento-item {
+	      display: flex;
+	      flex-direction: column;
+	      justify-content: space-between;
+	      text-align: center;
+	      padding: 24px;
+	      background: #f5f5f7;
+	      border: 1px solid #e0e0e0;
+	      border-radius: 16px;
+	      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	      transition: background 0.3s ease, box-shadow 0.3s ease;
+	    }
 
-    .bento-item:hover {
-      background: #f0f0f0;
-    }
+	    .bento-item:hover {
+	      background: #f0f0f0;
+	    }
 
-    .bento-item h2 {
-      margin-bottom: 8px;
-      color: #000;
-    }
+	    .bento-item h2 {
+	      margin-bottom: 8px;
+	      color: #000;
+	    }
 
-    .bento-item p {
-      font-size: 14px;
-      color: #6e6e73;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
+	    .bento-item p {
+	      font-size: 14px;
+	      color: #6e6e73;
+	      line-height: 1.6;
+	      margin-bottom: 16px;
+	    }
 
-    .bento-item.booking {
-      grid-column: span 2;
-      grid-row: span 1;
-    }
+	    .bento-item.booking {
+	      grid-column: span 2;
+	      grid-row: span 1;
+	    }
 
-    .bento-item.booking h2 {
-      font-size: 24px;
-      font-weight: 700;
-    }
+	    .bento-item.booking h2 {
+	      font-size: 24px;
+	      font-weight: 700;
+	    }
 
-    .bento-item.booking button {
-      width: 100%;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      background-color: #000;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+	    .bento-item.booking button {
+	      width: 100%;
+	      padding: 12px;
+	      font-size: 14px;
+	      font-weight: 600;
+	      color: #fff;
+	      background-color: #000;
+	      border: none;
+	      border-radius: 8px;
+	      cursor: pointer;
+	      transition: background 0.3s ease;
+	    }
 
-    .bento-item.booking button:hover {
-      background-color: #222;
-    }
+	    .bento-item.booking button:hover {
+	      background-color: #222;
+	    }
 
-    .bento-item.sales {
-      grid-column: span 1;
-      background: #000;
-      color: #fff;
-    }
+	    .bento-item.sales {
+	      grid-column: span 1;
+	      background: #000;
+	      color: #fff;
+	    }
 
-    .bento-item.sales h2 {
-      font-size: 20px;
-      font-weight: 600;
-    }
+	    .bento-item.sales h2 {
+	      font-size: 20px;
+	      font-weight: 600;
+	    }
 
-    .bento-item.sales button {
-      font-size: 14px;
-      font-weight: 600;
-      background: #ff4a22;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 12px 20px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+	    .bento-item.sales button {
+	      font-size: 14px;
+	      font-weight: 600;
+	      background: #ff4a22;
+	      color: #fff;
+	      border: none;
+	      border-radius: 8px;
+	      padding: 12px 20px;
+	      cursor: pointer;
+	      transition: background 0.3s ease;
+	    }
 
-    .bento-item.sales button:hover {
-      background: #e0431f;
-    }
+	    .bento-item.sales button:hover {
+	      background: #e0431f;
+	    }
 
-    .bento-item.explore, .bento-item.settings, .bento-item.profile {
-      grid-column: span 1;
-    }
+	    .bento-item.explore, .bento-item.settings, .bento-item.profile {
+	      grid-column: span 1;
+	    }
 
-    .bento-item.explore h2,
-    .bento-item.profile h2 {
-      font-size: 18px;
-      font-weight: 600;
-    }
+	    .bento-item.explore h2,
+	    .bento-item.profile h2 {
+	      font-size: 18px;
+	      font-weight: 600;
+	    }
 
-    .bento-item.settings h2 {
-      font-size: 16px;
-      font-weight: 500;
-    }
+	    .bento-item.settings h2 {
+	      font-size: 16px;
+	      font-weight: 500;
+	    }
 
-    .bento-item button {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      background-color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+	    .bento-item button {
+	      font-size: 14px;
+	      font-weight: 600;
+	      color: #fff;
+	      background-color: #000;
+	      border: none;
+	      border-radius: 8px;
+	      padding: 10px 20px;
+	      cursor: pointer;
+	      transition: background 0.3s ease;
+	    }
 
-    .bento-item button:hover {
-      background-color: #222;
-    }
+	    .bento-item button:hover {
+	      background-color: #222;
+	    }
 
-    @media (max-width: 1000px) {
-      .bento-container {
-        grid-template-columns: 1fr;
-      }
+	    @media (max-width: 1000px) {
+	      .bento-container {
+	        grid-template-columns: 1fr;
+	      }
 
-      .bento-item.booking {
-        grid-column: span 1;
-      }
+	      .bento-item.booking {
+	        grid-column: span 1;
+	      }
 
-      .bento-item.sales {
-        grid-column: span 1;
-      }
-    }
-  </style>
-  <div class='bento-container'>
-    
-    <div class='bento-item booking'>
-      <h2>See Booking on Your Events</h2>
-      <p>Check who's attending and manage bookings with ease.</p>
-      <a href='/dashboard?tab=bookings'><button>View Bookings</button></a>
-    </div>
+	      .bento-item.sales {
+	        grid-column: span 1;
+	      }
+	    }
+	  </style>
+	  <div class='bento-container'>
 
-    
-    <div class='bento-item sales'>
-      <h2 style='color: #fff;'>Sales on Your Event</h2>
-      <p>See ticket sales and revenue trends.</p>
-      <a href='/dashboard?tab=sales'><button>View Sales</button></a>
-    </div>
+	    <div class='bento-item booking'>
+	      <h2>See Booking on Your Events</h2>
+	      <p>Check who's attending and manage bookings with ease.</p>
+	      <a href='/dashboard?tab=bookings'><button>View Bookings</button></a>
+	    </div>
 
-    
-    <div class='bento-item explore'>
-      <h2>Explore Other Events</h2>
-      <p>Discover exciting events curated just for you.</p>
-      <a href='/explore'><button style='background-color: grey; width: 100%'>Explore</button></a>
-    </div>
 
-    
-    <div class='bento-item profile'>
-      <h2>View Your Profile</h2>
-      <p>Manage your personal details and preferences.</p>
-      <a href='/profile'><button style='background-color: grey; width: 100%'>View Profile</button></a>
-    </div>
+	    <div class='bento-item sales'>
+	      <h2 style='color: #fff;'>Sales on Your Event</h2>
+	      <p>See ticket sales and revenue trends.</p>
+	      <a href='/dashboard?tab=sales'><button>View Sales</button></a>
+	    </div>
 
-    
-    <div class='bento-item settings'>
-      <h2>View Settings</h2>
-      <p>Manage your account and preferences with ease.</p>
-      <a href='/settings'><button style='background-color: grey; width: 100%'>Settings</button></a>
-    </div>
-  </div>
-  </div>
-  ";
+
+	    <div class='bento-item explore'>
+	      <h2>Explore Other Events</h2>
+	      <p>Discover exciting events curated just for you.</p>
+	      <a href='/explore'><button style='background-color: grey; width: 100%'>Explore</button></a>
+	    </div>
+
+
+	    <div class='bento-item profile'>
+	      <h2>View Your Profile</h2>
+	      <p>Manage your personal details and preferences.</p>
+	      <a href='/profile'><button style='background-color: grey; width: 100%'>View Profile</button></a>
+	    </div>
+
+
+	    <div class='bento-item settings'>
+	      <h2>View Settings</h2>
+	      <p>Manage your account and preferences with ease.</p>
+	      <a href='/settings'><button style='background-color: grey; width: 100%'>Settings</button></a>
+	    </div>
+	  </div>
+	  </div>
+	  ";
         endif;
         break;
 }

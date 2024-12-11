@@ -1,6 +1,11 @@
+# DATA
 src/config/credentials.php
+public/uploads
+
+# JUNK DIRECTORIES
 docs/
 vendor/
-.php-cs-fixer.cache
 .idea/
-public/uploads
+
+# JUNK FILES
+.php-cs-fixer.cache

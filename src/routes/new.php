@@ -9,11 +9,18 @@ $errors = [];
 if ($user_id) {
     $query = "SELECT is_organizer FROM users WHERE user_id = $1";
     $result = pg_query_params($db, $query, [$user_id]);
-    $user = pg_fetch_assoc($result);
 
-    if (!$user || !$user["is_organizer"]) {
-        $updateQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1";
-        pg_query_params($db, $updateQuery, [$user_id]);
+    if ($result) {
+        $user = pg_fetch_assoc($result);
+        if (!$user["is_organizer"]) {
+            $updateQuery = "UPDATE users SET is_organizer = TRUE WHERE user_id = $1";
+            $updateResult = pg_query_params($db, $updateQuery, [$user_id]);
+            if (!$updateResult) {
+                error_log("Error updating user: " . pg_last_error($db));
+            }
+        }
+    } else {
+        error_log("Error in SELECT query: " . pg_last_error($db));
     }
 } else {
     header("Location: /login");
